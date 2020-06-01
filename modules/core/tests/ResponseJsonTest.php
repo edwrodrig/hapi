@@ -1,0 +1,25 @@
+<?php
+declare(strict_types=1);
+
+namespace test\edwrodrig\hapi_core;
+
+use edwrodrig\hapi_core\ResponseJson;
+use PHPUnit\Framework\TestCase;
+
+class ResponseJsonTest extends TestCase
+{
+    /**
+     * @runInSeparateProcess
+     */
+    public function testSend()
+    {
+        $originalData = ['a' => 1, 'b' => 2];
+        $response = new ResponseJson();
+        $response->data= $originalData;
+        ob_start();
+        $response->send();
+        $json_data = ob_get_clean();
+        $recoveredData = json_decode($json_data, true);
+        $this->assertEquals($originalData, $recoveredData);
+    }
+}
