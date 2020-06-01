@@ -1,6 +1,6 @@
 {
   "name": "edwrodrig/hapi",
-  "description": "Una nueva asombrosa biblioteca Composer",
+  "description": "Mi nueva biblioteca para manejar HTTP requests y responses",
   "authors": [
     {
       "name": "Edwin Rodríguez-León",
