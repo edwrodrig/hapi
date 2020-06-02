@@ -21,9 +21,12 @@ composer require edwrodrig/hapi
 ## Información de mi máquina de desarrollo
 Salida de [system_info.sh](https://github.com/edwrodrig/hapi/blob/master/scripts/system_info.sh)
 ```
++ hostnamectl
++ grep -e 'Operating System:' -e Kernel:
   Operating System: Ubuntu 20.04 LTS
-            Kernel: Linux 5.4.0-31-generic
-PHP 7.4.3 (cli) (built: May  5 2020 12:14:27) ( NTS )
+            Kernel: Linux 5.4.0-33-generic
++ php --version
+PHP 7.4.3 (cli) (built: May 26 2020 12:24:22) ( NTS )
 Copyright (c) The PHP Group
 Zend Engine v3.4.0, Copyright (c) Zend Technologies
     with Zend OPcache v7.4.3, Copyright (c), by Zend Technologies
