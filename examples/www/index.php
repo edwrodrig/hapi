@@ -46,7 +46,7 @@ try {
  */
 catch ( Throwable $e ) {
     header('Content-Type: application/json;charset=utf-8');
-    //http_response_code(404);
+    http_response_code(404);
 
     echo json_encode([
         'error' => $e->getMessage(),
