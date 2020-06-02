@@ -20,6 +20,11 @@ class BuiltInServer
     private int $port = 2280;
 
     /**
+     * @var resource
+     */
+    public $pipe_stderr;
+
+    /**
      * Construir un BuiltInServer
      *
      * Esta clase esta pensada solo para usarse en modo de pruebas ya que lanzar un servidor PHP es algo truculento y propenso a bugs.
@@ -54,6 +59,7 @@ class BuiltInServer
     public function __destruct()
     {
         if ( is_resource($this->server_process) ) {
+            if ( is_resource($this->pipe_stderr) ) fclose($this->pipe_stderr);
             $status = proc_get_status($this->server_process);
 
             if (  $status["running"] )
@@ -64,6 +70,22 @@ class BuiltInServer
             }
             proc_close($this->server_process);
         }
+    }
+
+    /**
+     * Obtiene el contenido completo de la salida de error del servidor.
+     * El servidor envía mensajes por la salida de error.
+     * Esta función es  para ver lo que ocurre con los scripts cargados por el servidor.
+     * @return string
+     */
+    public function getStdErr() : string {
+        if ( is_resource($this->pipe_stderr) ) {
+            $meta_data = stream_get_meta_data($this->pipe_stderr);
+            $filename = $meta_data["uri"];
+            return file_get_contents($filename);
+
+        }
+        return "";
     }
 
     /**
@@ -79,14 +101,16 @@ class BuiltInServer
      */
     public function run() : bool {
         $command = $this->getCommand();
+
+        $this->pipe_stderr = tmpfile();
+
         $this->server_process = proc_open($command, [
             0 => ['pipe', 'r'],  // stdin is a pipe that the child will read from
             1 => ['pipe', 'w'],  // stdout is a pipe that the child will write to
-            2 => ['pipe', 'w'] // stderr is a pipe that the child will write to], $pipes);
+            2 => $this->pipe_stderr // stderr is a pipe that the child will write to
         ], $pipes);
         fclose($pipes[0]);
         fclose($pipes[1]);
-        fclose($pipes[2]);
         if ( is_resource($this->server_process) ) {
             sleep(1);
             return true;
@@ -127,21 +151,23 @@ class BuiltInServer
      * Si se quiere hacer una request por el método POST, hacer algo como lo siguiente:
      * <code>
      * $context  = stream_context_create([
-     *    'http' => [
-     *      'header'  => "Content-type: text/plain\r\n",
-     *      'method'  => 'POST',
-     *      'content' => 'hello world'
-     *    ]
+     *    'header'  => "Content-type: text/plain\r\n",
+     *    'method'  => 'POST',
+     *    'content' => 'hello world'
      * ]);
      * $server->makeRequest('index.php', $context);
      * </code>
      * @param string $file ruta del archivo, puede tener {@see https://tools.ietf.org/html/rfc3986#section-3.4 query string}
-     * @param resource|null $context el {@see https://www.php.net/manual/en/function.stream-context-create.php stream context} correspondiente a {@see file_get_contents()}
+     * @param array $context los {@see https://www.php.net/manual/en/context.http.php parametros de contexto http} correspondiente a {@see file_get_contents()}
      * @return string
      */
-    public function makeRequest(string $file, $context = null) : string {
+    public function makeRequest(string $file, $context = []) : string {
+        $context['ignore_errors'] = true;
+        $context  = stream_context_create(['http' => $context]);
+
         $url = $this->getBaseUrl() . '/' . $file;
         return file_get_contents($url, false, $context);
+
     }
 
 }

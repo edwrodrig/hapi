@@ -17,5 +17,20 @@ class BuiltInServerTest extends TestCase
 
         $this->assertEquals("", $response);
 
+        $this->assertStringContainsString('[200]: GET /get_method.php', $server->getStdErr());
+    }
+
+    public function testServerError()
+    {
+        $server = new BuiltInServer(__DIR__ . '/resources/www');
+        $server->run();
+
+
+
+        $response = $server->makeRequest('syntax_error.php');
+
+        $this->assertEquals("", $response);
+
+        $this->assertStringContainsString('PHP Fatal error:  Uncaught Error: Call to a member function call() on null', $server->getStdErr());
     }
 }

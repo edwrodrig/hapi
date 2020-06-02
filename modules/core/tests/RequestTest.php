@@ -56,13 +56,12 @@ class RequestTest extends TestCase
      */
     public function testJsonRequest()
     {
-        $context  = stream_context_create([
-            'http' => [
-                'header'  => "Content-type: application/json\r\n",
-                'method'  => 'POST',
-                'content' => json_encode(["method" => "action", "param" => "content"])
-            ]
-        ]);
+        $context  = [
+            'header'  => "Content-type: application/json\r\n",
+            'method'  => 'POST',
+            'content' => json_encode(["method" => "action", "param" => "content"])
+        ];
+
 
         $response = self::$server->makeRequest('get_method.php', $context);
         $this->assertEquals("action", $response);
@@ -76,13 +75,11 @@ class RequestTest extends TestCase
      */
     public function testJsonRequestCharset()
     {
-        $context  = stream_context_create([
-            'http' => [
+        $context  = [
                 'header'  => "Content-type: application/json; charset=utf-8\r\n",
                 'method'  => 'POST',
                 'content' => json_encode(["method" => "action", "param" => "content"])
-            ]
-        ]);
+        ];
 
         $response = self::$server->makeRequest('get_method.php', $context);
         $this->assertEquals("action", $response);
