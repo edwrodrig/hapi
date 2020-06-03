@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace edwrodrig\hapi_core;
 
+use edwrodrig\exception_with_data\ExceptionWithData;
+
 /**
  * Class ServicesMap
  * @package edwrodrig\hapi_core
@@ -56,13 +58,13 @@ class ServicesMap
     /**
      * @param string $method_name
      * @return callable
-     * @throws ServiceException
+     * @throws ExceptionWithData
      */
     public function getService(string $method_name) {
         if ( isset($this->service_map[$method_name]) ) {
             return $this->service_map[$method_name];
         } else {
-            throw new ServiceException("Service method name not registered", "Wrong request", NULL, $method_name);
+            throw new ExceptionWithData("service not registered", ["method_name" => $method_name]);
         }
     }
 }
