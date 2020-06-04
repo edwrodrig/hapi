@@ -13,30 +13,26 @@ class Controller
 {
     protected ServiceMap $service_map;
 
-    protected Request $request;
-
     protected string $error_log_filename;
 
     public function __construct() {
         $this->service_map = new ServiceMap();
-        $this->request = new Request();
-        $this->error_log_filename = $this->getEnvVar('ERROR_LOG_FILENAME') ?? 'php://tmp';
-    }
-
-    public function setErrorLogFilename(string $path) {
-        $this->error_log_filename = $path;
+        $this->error_log_filename = $this->getEnvVar('ERROR_LOG_FILENAME') ?? 'php://temp';
     }
 
     public function getServiceMap() : ServiceMap {
         return $this->service_map;
     }
 
+    /**
+     * @codeCoverageIgnore
+     * @return Request
+     */
     protected function getRequest() : Request {
-        return $this->request;
+        return new Request();
     }
 
     /**
-     * @codeCoverageIgnore
      * @param string $var_name
      * @return string|null
      */

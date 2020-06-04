@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace test\edwrodrig\hapi\local;
 
+use edwrodrig\exception_with_data\ExceptionWithData;
 use edwrodrig\hapi_core\BuiltInServer;
 use PHPUnit\Framework\TestCase;
 
@@ -16,6 +17,7 @@ class ExamplesTest extends TestCase
 
     /**
      * Testeando examples/www/index.php
+     * @throws ExceptionWithData
      */
     public function testExampleWww()
     {

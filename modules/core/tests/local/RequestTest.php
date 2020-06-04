@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace test\edwrodrig\hapi_core\local;
 
+use edwrodrig\exception_with_data\ExceptionWithData;
 use edwrodrig\hapi_core\BuiltInServer;
 use PHPUnit\Framework\TestCase;
 
@@ -41,6 +42,7 @@ class RequestTest extends TestCase
      * @param array $expected_params
      * @param string $expected_method
      * @param string $query_params
+     * @throws ExceptionWithData
      */
     public function testGetRequest(array $expected_params, string $expected_method, string $query_params)
     {
@@ -53,6 +55,7 @@ class RequestTest extends TestCase
 
     /**
      * @dataProvider getMethodProvider
+     * @throws ExceptionWithData
      */
     public function testJsonRequest()
     {
@@ -72,6 +75,7 @@ class RequestTest extends TestCase
 
     /**
      * @dataProvider getMethodProvider
+     * @throws ExceptionWithData
      */
     public function testJsonRequestCharset()
     {

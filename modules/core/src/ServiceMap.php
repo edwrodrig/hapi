@@ -23,7 +23,7 @@ class ServiceMap
      * El nombre de método es un string que sirve para identificar un {@see Service servicio}.
      * Un servicio de debe registrar usando el {@see registerService()}.
      *
-     * <strong>OJO:</strong>Solo se deben registrar servicios que tengan constructores que se puedan invocar </strong>sin parametros.</strong>
+     * <strong>OJO:</strong>Solo se deben registrar servicios que tengan constructores que se puedan invocar </strong>sin parámetros.</strong>
      *
      * <h2>Creación</h2>
      * Ejemplo:

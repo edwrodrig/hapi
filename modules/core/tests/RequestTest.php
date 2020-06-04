@@ -21,7 +21,7 @@ class RequestTest extends TestCase
             ->method('getParams')
             ->willReturn(['method' => 'something']);
 
-        /** @noinspection PhpUndefinedMethodInspection */
+        /** @var Request $stub */
         $this->assertEquals('something', $stub->getMethod());
 
     }
@@ -38,7 +38,7 @@ class RequestTest extends TestCase
             ->method('getParams')
             ->willReturn([]);
 
-        /** @noinspection PhpUndefinedMethodInspection */
+        /** @var Request $stub */
         $this->assertEquals('', $stub->getMethod());
 
     }
@@ -67,7 +67,7 @@ class RequestTest extends TestCase
             ->willReturn($actual);
 
 
-        /** @noinspection PhpUndefinedMethodInspection */
+        /** @var Request $stub */
         $this->assertEquals($expected, $stub->getContentType());
 
     }

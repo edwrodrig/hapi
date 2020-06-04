@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace edwrodrig\hapi_core;
 
+use edwrodrig\exception_with_data\ExceptionWithData;
+
 /**
  * Class BuiltInServer
  * Esta clase sirve para lanzar un servidor PHP local para pruebas.
@@ -23,7 +25,6 @@ class BuiltInServer
      * @var resource
      */
     public $pipe_stderr;
-
 
     private array $environment = [];
 
@@ -49,7 +50,7 @@ class BuiltInServer
 
      * @param string $document_root la carpeta que es la {@see https://www.php.net/manual/en/reserved.variables.server.php raíz de los documentos}
      */
-    public function __construct(string $document_root) {
+    public function __construct(string $document_root = '.') {
         if ( !is_dir($document_root) ) $document_root = '.';
         $this->document_root = $document_root;
     }
@@ -73,12 +74,12 @@ class BuiltInServer
      * Función complicada.
      * Puede ser propensa a errores.
      * Funciona pero no confío mucho en ella. Si ocurren errores puede que acá esté la causa.
-     * @codeCoverageIgnore
      */
     public function __destruct()
     {
+        if ( is_resource($this->pipe_stderr) ) fclose($this->pipe_stderr);
         if ( is_resource($this->server_process) ) {
-            if ( is_resource($this->pipe_stderr) ) fclose($this->pipe_stderr);
+            // @codeCoverageIgnoreStart
             $status = proc_get_status($this->server_process);
 
             if (  $status["running"] )
@@ -88,6 +89,7 @@ class BuiltInServer
                 sleep(1);
             }
             proc_close($this->server_process);
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -118,7 +120,6 @@ class BuiltInServer
      * Con {@see getCommand()} se puede ver el comando que es ejecutado para levantar el servidor.
      * Se considerará las variables de entorno establecidas con {@see setEnvironment()}.
      * @return bool
-     * @codeCoverageIgnore
      */
     public function run() : bool {
         $command = $this->getCommand();
@@ -130,13 +131,14 @@ class BuiltInServer
             1 => ['pipe', 'w'],  // stdout is a pipe that the child will write to
             2 => $this->pipe_stderr // stderr is a pipe that the child will write to
         ], $pipes, null, $this->environment);
-        fclose($pipes[0]);
-        fclose($pipes[1]);
+
         if ( is_resource($this->server_process) ) {
+            fclose($pipes[0]);
+            fclose($pipes[1]);
             sleep(1);
             return true;
         }
-        return false;
+        return false; // @codeCoverageIgnore
     }
 
     /**
@@ -147,6 +149,7 @@ class BuiltInServer
      * @return string
      */
     public function getCommand() : string {
+        /** @noinspection SpellCheckingInspection */
         return sprintf("exec php -d variables_order=EGPCS -S localhost:%d -t %s", $this->port, escapeshellarg($this->document_root));
     }
 
@@ -183,14 +186,19 @@ class BuiltInServer
      * @param string $file ruta del archivo, puede tener {@see https://tools.ietf.org/html/rfc3986#section-3.4 query string}
      * @param array $context los {@see https://www.php.net/manual/en/context.http.php parametros de contexto http} correspondiente a {@see file_get_contents()}
      * @return string
+     * @throws ExceptionWithData
      */
     public function makeRequest(string $file, $context = []) : string {
+        if ( !is_resource($this->server_process) )
+            throw new ExceptionWithData("server is not running", [
+                'document_root' => $this->document_root
+            ]);
+
         $context['ignore_errors'] = true;
         $context  = stream_context_create(['http' => $context]);
 
         $url = $this->getBaseUrl() . '/' . $file;
         return file_get_contents($url, false, $context);
-
     }
 
 }

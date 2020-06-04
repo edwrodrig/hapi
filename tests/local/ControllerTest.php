@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace test\edwrodrig\hapi\local;
 
 
+use edwrodrig\exception_with_data\ExceptionWithData;
 use edwrodrig\hapi_core\BuiltInServer;
 use PHPUnit\Framework\TestCase;
 
@@ -28,6 +29,7 @@ class ControllerTest extends TestCase
 
     /**
      * Testeando examples/www2/index.php
+     * @throws ExceptionWithData
      */
     public function testExampleWwwError()
     {
@@ -53,6 +55,7 @@ class ControllerTest extends TestCase
 
     /**
      * Testeando examples/www2/index.php
+     * @throws ExceptionWithData
      */
     public function testExampleWwwOk()
     {
