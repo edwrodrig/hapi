@@ -11,13 +11,16 @@ use Throwable;
 
 class Controller
 {
-
     protected ServiceMap $service_map;
 
-    protected string $error_log_filename = 'php://tmp';
+    protected Request $request;
+
+    protected string $error_log_filename;
 
     public function __construct() {
         $this->service_map = new ServiceMap();
+        $this->request = new Request();
+        $this->error_log_filename = $this->getEnvVar('ERROR_LOG_FILENAME') ?? 'php://tmp';
     }
 
     public function setErrorLogFilename(string $path) {
@@ -28,12 +31,23 @@ class Controller
         return $this->service_map;
     }
 
+    protected function getRequest() : Request {
+        return $this->request;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @param string $var_name
+     * @return string|null
+     */
+    protected function getEnvVar(string $var_name) : ?string {
+        return $_SERVER[$var_name] ?? $_ENV[$var_name] ?? null;
+    }
+
     public function run() {
         try {
-
-            $request = new Request();
+            $request = $this->getRequest();
             $method = $request->getMethod();
-
 
             $response = $this->service_map->getService($method)($request);
             $response->send();

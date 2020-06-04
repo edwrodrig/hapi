@@ -30,7 +30,9 @@
   "autoload-dev": {
     "psr-4": {
       "test\\edwrodrig\\hapi\\": "tests/",
-      "test\\edwrodrig\\hapi_core\\": "modules/core/tests/"
+      "test\\edwrodrig\\hapi\\local\\": "tests/local/",
+      "test\\edwrodrig\\hapi_core\\": "modules/core/tests/",
+      "test\\edwrodrig\\hapi_core\\local\\": "modules/core/tests/local/"
     },
     "files" : [
       "modules/core/src/BuiltInServer.php"

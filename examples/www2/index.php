@@ -10,7 +10,6 @@ include_once(__DIR__ . '/../../vendor/autoload.php');
 
 
 $controller = new Controller();
-$controller->setErrorLogFilename('/home/edwin/error_log');
 $controller->getServiceMap()
     ->registerService('echo', function(Request $request) : Response {
         return new ResponseJson([

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace test\edwrodrig\hapi;
+namespace test\edwrodrig\hapi\local;
 
 use edwrodrig\hapi_core\BuiltInServer;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +19,7 @@ class ExamplesTest extends TestCase
      */
     public function testExampleWww()
     {
-        $server = new BuiltInServer(__DIR__ . '/../examples/www');
+        $server = new BuiltInServer(__DIR__ . '/../../examples/www');
         $server->run();
 
         $response = $server->makeRequest('index.php');

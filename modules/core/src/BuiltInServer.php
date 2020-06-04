@@ -24,6 +24,9 @@ class BuiltInServer
      */
     public $pipe_stderr;
 
+
+    private array $environment = [];
+
     /**
      * Construir un BuiltInServer
      *
@@ -52,9 +55,25 @@ class BuiltInServer
     }
 
     /**
+     * Establece las variables de entorno del servidor.
+     * Ejemplo:
+     * <code>
+     * $server->setEnvironment([
+     *     'VAR_1' => 'something',
+     *     'VAR_2' => 'something 2'
+     * ]);
+     * </code>
+     * @param array $environment
+     */
+    public function setEnvironment(array $environment) {
+        $this->environment = $environment;
+    }
+
+    /**
      * Función complicada.
      * Puede ser propensa a errores.
      * Funciona pero no confío mucho en ella. Si ocurren errores puede que acá esté la causa.
+     * @codeCoverageIgnore
      */
     public function __destruct()
     {
@@ -97,7 +116,9 @@ class BuiltInServer
      *
      * Se pueden hacer request con {@see makeRequest()}.
      * Con {@see getCommand()} se puede ver el comando que es ejecutado para levantar el servidor.
+     * Se considerará las variables de entorno establecidas con {@see setEnvironment()}.
      * @return bool
+     * @codeCoverageIgnore
      */
     public function run() : bool {
         $command = $this->getCommand();
@@ -108,7 +129,7 @@ class BuiltInServer
             0 => ['pipe', 'r'],  // stdin is a pipe that the child will read from
             1 => ['pipe', 'w'],  // stdout is a pipe that the child will write to
             2 => $this->pipe_stderr // stderr is a pipe that the child will write to
-        ], $pipes);
+        ], $pipes, null, $this->environment);
         fclose($pipes[0]);
         fclose($pipes[1]);
         if ( is_resource($this->server_process) ) {
@@ -121,10 +142,12 @@ class BuiltInServer
     /**
      * Ver el comando que se ejecuta para levantar el servidor.
      * Lo que hace por el momento es escuchar el <strong>localhost</strong> en el puerto <strong>2280</strong>.
+     * <strong>IMPORTANTE</strong>
+     * Debe ser lanzado con exec, sino el servidor no se cierra bien y queda como un proceso zombie dejando el puerto tomado lo que impide que sea llamado muchas veces.
      * @return string
      */
     public function getCommand() : string {
-        return sprintf("exec php -S localhost:%d -t %s", $this->port, escapeshellarg($this->document_root));
+        return sprintf("exec php -d variables_order=EGPCS -S localhost:%d -t %s", $this->port, escapeshellarg($this->document_root));
     }
 
     /**

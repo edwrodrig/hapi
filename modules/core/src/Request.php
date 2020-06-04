@@ -7,8 +7,11 @@ class Request
 {
      protected array $params;
 
+    /**
+     * @codeCoverageIgnore
+     */
      public function __construct() {
-         $request_method = $_SERVER['REQUEST_METHOD'];
+         $request_method = $this->getServerVariable('REQUEST_METHOD');
          if ( $request_method == "GET" ) {
              $this->params = $_GET;
          } else if ( $request_method == "POST" ) {
@@ -17,20 +20,36 @@ class Request
 
      }
 
+    /**
+     * @codeCoverageIgnore
+     * @param string $name
+     * @return string
+     */
+     protected function getServerVariable(string $name) : string {
+         return  $_SERVER[$name];
+     }
+
     public function getMethod() : string {
-        return $this->params['method'] ?? '';
+        return $this->getParams()['method'] ?? '';
     }
 
+    /**
+     * @codeCoverageIgnore
+     * @return array
+     */
     public function getParams() : array {
          return $this->params;
     }
 
-    protected function getContentType() : string {
-        $content_type = $_SERVER["CONTENT_TYPE"];
+    public function getContentType() : string {
+        $content_type = $this->getServerVariable("CONTENT_TYPE");
         $elements = explode(";", $content_type, 2);
         return trim($elements[0]);
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     protected function getPostParams() : array {
         $content_type = $this->getContentType();
 
