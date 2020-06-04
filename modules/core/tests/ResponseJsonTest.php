@@ -14,8 +14,7 @@ class ResponseJsonTest extends TestCase
     public function testSend()
     {
         $originalData = ['a' => 1, 'b' => 2];
-        $response = new ResponseJson();
-        $response->data= $originalData;
+        $response = new ResponseJson($originalData);
         ob_start();
         $response->send();
         $json_data = ob_get_clean();

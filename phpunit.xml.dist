@@ -7,6 +7,7 @@
             <exclude>./modules/core/tests/RequestTest.php</exclude>
             <exclude>./modules/core/tests/BuiltInServerTest.php</exclude>
             <exclude>./tests/ExamplesTest.php</exclude>
+            <exclude>./tests/ControllerTest.php</exclude>
         </testsuite>
     </testsuites>
     <filter>
@@ -16,6 +17,7 @@
         <exclude>
            <file>./modules/core/src/Request.php</file>
            <file>./modules/core/src/BuildInServer.php</file>
+            <file>./src/Controller.php</file>
         </exclude>
        </whitelist>
     </filter>

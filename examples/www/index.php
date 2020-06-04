@@ -4,7 +4,7 @@ declare(strict_types=1);
 use edwrodrig\hapi_core\Request;
 use edwrodrig\hapi_core\Response;
 use edwrodrig\hapi_core\ResponseJson;
-use edwrodrig\hapi_core\ServicesMap;
+use edwrodrig\hapi_core\ServiceMap;
 
 include_once(__DIR__ . '/../../vendor/autoload.php');
 
@@ -21,17 +21,15 @@ try {
     $method = $request->getMethod();
 
     /** Se construye el ServiceMap */
-    $services = new ServicesMap();
+    $services = new ServiceMap();
 
     /** Y se registra el servicio que creamos anteriormente */
     $services
         ->registerService('echo', function(Request $request) : Response {
-            $response = new ResponseJson();
-            $response->data = [
+            return new ResponseJson([
                 'message' => 'successful',
                 'request_params' => $request->getParams()
-            ];
-            return $response;
+            ]);
         });
 
 
@@ -45,13 +43,13 @@ try {
  * En caso de excepción se puede procesar errores.
  */
 catch ( Throwable $e ) {
-    header('Content-Type: application/json;charset=utf-8');
     http_response_code(404);
 
-    echo json_encode([
+    $response = new ResponseJson([
         'error' => $e->getMessage(),
         'try_this' => 'http://localhost:8080/index.php?method=echo'
-    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    ]);
+    $response->send();
 
 }
 

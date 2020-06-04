@@ -6,10 +6,11 @@ namespace edwrodrig\hapi_core;
 
 class ResponseJson extends Response
 {
-    /**
-     * @var mixed
-     */
-    public $data;
+    protected array $data;
+
+    public function __construct(array $data) {
+        $this->data = $data;
+    }
 
     public function send() {
         $json_response = json_encode($this->data, JSON_PRETTY_PRINT);

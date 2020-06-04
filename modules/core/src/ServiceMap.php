@@ -6,10 +6,10 @@ namespace edwrodrig\hapi_core;
 use edwrodrig\exception_with_data\ExceptionWithData;
 
 /**
- * Class ServicesMap
+ * Class ServiceMap
  * @package edwrodrig\hapi_core
  */
-class ServicesMap
+class ServiceMap
 {
     /**
      * @var array|callable[]
@@ -50,7 +50,7 @@ class ServicesMap
      * @param callback $service_callback
      * @return $this
      */
-    public function registerService(string $method_name, $service_callback) : ServicesMap {
+    public function registerService(string $method_name, $service_callback) : ServiceMap {
         $this->service_map[$method_name] = $service_callback;
         return $this;
     }

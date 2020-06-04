@@ -5,7 +5,11 @@ namespace edwrodrig\hapi_core;
 
 class ResponseFile extends Response
 {
-    public string $filename;
+    protected string $filename;
+
+    public function __construct(string $filename) {
+        $this->filename = $filename;
+    }
 
     /**
      * https://stackoverflow.com/questions/38180690/how-to-force-download-different-type-of-extension-file-php

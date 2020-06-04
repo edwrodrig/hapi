@@ -13,7 +13,7 @@
   "minimum-stability": "stable",
   "require": {
     "php": "^7.4",
-    "edwrodrig/exception_with_data" : "dev-master",
+    "edwrodrig/exception_with_data" : "^1.0",
     "ext-json": "*"
   },
   "require-dev": {

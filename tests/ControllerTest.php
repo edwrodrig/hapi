@@ -3,33 +3,36 @@ declare(strict_types=1);
 
 namespace test\edwrodrig\hapi;
 
+use edwrodrig\hapi\Controller;
 use edwrodrig\hapi_core\BuiltInServer;
 use PHPUnit\Framework\TestCase;
 
-class ExamplesTest extends TestCase
+class ControllerTest extends TestCase
 {
 
-    public function assertJsonStringToArray(array $expected, string $actual, string $message = "") {
+    public function assertResponseToArray(array $expected, string $actual, string $message = "") {
         $this->assertJson($actual);
-        $this->assertEquals($expected, json_decode($actual, true), $message);
+        $actual = json_decode($actual, true);
+        unset($actual['i']);
+        $this->assertEquals($expected, $actual, $message);
     }
 
     /**
-     * Testeando examples/www/index.php
+     * Testeando examples/www2/index.php
      */
     public function testExampleWww()
     {
-        $server = new BuiltInServer(__DIR__ . '/../examples/www');
+        $server = new BuiltInServer(__DIR__ . '/../examples/www2');
         $server->run();
 
         $response = $server->makeRequest('index.php');
-        $this->assertJsonStringToArray([
-            'error' => 'service not registered',
-            'try_this' => 'http://localhost:8080/index.php?method=echo'
+        $this->assertResponseToArray([
+            'm' => 'internal error',
+            'd' => []
         ],  $response);
 
         $response = $server->makeRequest('index.php?method=echo');
-        $this->assertJsonStringToArray([
+        $this->assertResponseToArray([
             'message' => 'successful',
             'request_params' => [
                 'method' => 'echo'
@@ -37,5 +40,6 @@ class ExamplesTest extends TestCase
         ],  $response);
 
     }
+
 
 }
