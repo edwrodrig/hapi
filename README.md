@@ -10,9 +10,6 @@ Mi nueva biblioteca para manejar HTTP requests y responses.
 [![Code Climate](https://codeclimate.com/github/labo86/hapi/badges/gpa.svg)](https://codeclimate.com/github/labo86/hapi)
 ![Hecho en Chile](https://img.shields.io/badge/country-Chile-red)
 
-Por el momento lo que puedo decir es que va a reemplazar a mi antigua biblioteca [http_services](https://github.com/labo86/http_services).
-Próximamente se desvincularán el código base en una biblioteca core. 
-
 ## Instalación
 ```
 composer require labo86/hapi
