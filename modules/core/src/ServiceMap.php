@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace edwrodrig\hapi_core;
+namespace labo86\hapi_core;
 
-use edwrodrig\exception_with_data\ExceptionWithData;
+use labo86\exception_with_data\ExceptionWithData;
 
 /**
  * Class ServiceMap
- * @package edwrodrig\hapi_core
+ * @package labo86\hapi_core
  */
 class ServiceMap
 {

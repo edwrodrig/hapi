@@ -1,25 +1,25 @@
-edwrodrig\hapi
+labo86\hapi
 ========
 Mi nueva biblioteca para manejar HTTP requests y responses.
 
-[![Latest Stable Version](https://poser.pugx.org/edwrodrig/hapi/v/stable)](https://packagist.org/packages/edwrodrig/hapi)
-[![Total Downloads](https://poser.pugx.org/edwrodrig/hapi/downloads)](https://packagist.org/packages/edwrodrig/hapi)
-[![License](https://poser.pugx.org/edwrodrig/hapi/license)](https://github.com/edwrodrig/hapi/blob/master/LICENSE)
-[![Build Status](https://travis-ci.org/edwrodrig/hapi.svg?branch=master)](https://travis-ci.org/edwrodrig/hapi)
-[![codecov.io Code Coverage](https://codecov.io/gh/edwrodrig/hapi/branch/master/graph/badge.svg)](https://codecov.io/github/edwrodrig/hapi?branch=master)
-[![Code Climate](https://codeclimate.com/github/edwrodrig/hapi/badges/gpa.svg)](https://codeclimate.com/github/edwrodrig/hapi)
+[![Latest Stable Version](https://poser.pugx.org/labo86/hapi/v/stable)](https://packagist.org/packages/labo86/hapi)
+[![Total Downloads](https://poser.pugx.org/labo86/hapi/downloads)](https://packagist.org/packages/labo86/hapi)
+[![License](https://poser.pugx.org/labo86/hapi/license)](https://github.com/labo86/hapi/blob/master/LICENSE)
+[![Build Status](https://travis-ci.org/labo86/hapi.svg?branch=master)](https://travis-ci.org/labo86/hapi)
+[![codecov.io Code Coverage](https://codecov.io/gh/labo86/hapi/branch/master/graph/badge.svg)](https://codecov.io/github/labo86/hapi?branch=master)
+[![Code Climate](https://codeclimate.com/github/labo86/hapi/badges/gpa.svg)](https://codeclimate.com/github/labo86/hapi)
 ![Hecho en Chile](https://img.shields.io/badge/country-Chile-red)
 
-Por el momento lo que puedo decir es que va a reemplazar a mi antigua biblioteca [http_services](https://github.com/edwrodrig/http_services).
+Por el momento lo que puedo decir es que va a reemplazar a mi antigua biblioteca [http_services](https://github.com/labo86/http_services).
 Próximamente se desvincularán el código base en una biblioteca core. 
 
 ## Instalación
 ```
-composer require edwrodrig/hapi
+composer require labo86/hapi
 ```
 
 ## Información de mi máquina de desarrollo
-Salida de [system_info.sh](https://github.com/edwrodrig/hapi/blob/master/scripts/system_info.sh)
+Salida de [system_info.sh](https://github.com/labo86/hapi/blob/master/scripts/system_info.sh)
 ```
 + hostnamectl
 + grep -e 'Operating System:' -e Kernel:

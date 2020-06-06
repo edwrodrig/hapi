@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace edwrodrig\hapi;
+namespace labo86\hapi;
 
-use edwrodrig\exception_with_data\ExceptionWithData;
+use labo86\exception_with_data\ExceptionWithData;
 use Throwable;
 
 class ServiceException extends ExceptionWithData {

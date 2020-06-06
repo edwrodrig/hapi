@@ -1,10 +1,10 @@
 <?php
 /**
- * Este archivo es usado por \test\edwrodrig\hapi_core\RequestTest
+ * Este archivo es usado por \test\labo86\hapi_core\RequestTest
  */
 declare(strict_types=1);
 
-use edwrodrig\hapi_core\Request;
+use labo86\hapi_core\Request;
 
 include_once(__DIR__ . '/../../../../../../vendor/autoload.php');
 

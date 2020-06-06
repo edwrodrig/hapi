@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace test\edwrodrig\hapi_core;
+namespace test\labo86\hapi_core;
 
-use edwrodrig\exception_with_data\ExceptionWithData;
-use edwrodrig\hapi_core\BuiltInServer;
+use labo86\exception_with_data\ExceptionWithData;
+use labo86\hapi_core\BuiltInServer;
 use PHPUnit\Framework\TestCase;
 
 class BuiltInServerTest extends TestCase
@@ -92,7 +92,7 @@ class BuiltInServerTest extends TestCase
         /** @var BuiltInServer $stub */
         $stub->run();
 
-        $content = $stub->makeRequest('edwrodrig/hapi/blob/master/README.md');
+        $content = $stub->makeRequest('labo86/hapi/blob/master/README.md');
         $this->assertNotEmpty($content);
     }
 
@@ -116,7 +116,7 @@ class BuiltInServerTest extends TestCase
         /** @var BuiltInServer $stub */
         $stub->run();
 
-        $content = $stub->makeRequest('edwrodrig/hapi/blob/master/not_existent.md');
+        $content = $stub->makeRequest('labo86/hapi/blob/master/not_existent.md');
         $this->assertNotEmpty($content);
     }
 
@@ -133,7 +133,7 @@ class BuiltInServerTest extends TestCase
 
         try {
             /** @var BuiltInServer $stub */
-            $stub->makeRequest('edwrodrig/hapi/blob/master/not_existent.md');
+            $stub->makeRequest('labo86/hapi/blob/master/not_existent.md');
             $this->fail("should throw");
 
         } catch (ExceptionWithData $exception) {

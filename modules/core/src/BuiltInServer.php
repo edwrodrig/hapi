@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace edwrodrig\hapi_core;
+namespace labo86\hapi_core;
 
-use edwrodrig\exception_with_data\ExceptionWithData;
+use labo86\exception_with_data\ExceptionWithData;
 
 /**
  * Class BuiltInServer
  * Esta clase sirve para lanzar un servidor PHP local para pruebas.
- * @package test\edwrodrig\hapi_core
+ * @package test\labo86\hapi_core
  */
 class BuiltInServer
 {

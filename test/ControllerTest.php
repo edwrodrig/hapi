@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace test\edwrodrig\hapi;
+namespace test\labo86\hapi;
 
-use edwrodrig\hapi\Controller;
-use edwrodrig\hapi_core\Request;
-use edwrodrig\hapi_core\Response;
-use edwrodrig\hapi_core\ResponseJson;
+use labo86\hapi\Controller;
+use labo86\hapi_core\Request;
+use labo86\hapi_core\Response;
+use labo86\hapi_core\ResponseJson;
 use PHPUnit\Framework\TestCase;
 
 class ControllerTest extends TestCase

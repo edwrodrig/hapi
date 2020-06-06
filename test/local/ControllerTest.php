@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace test\edwrodrig\hapi\local;
+namespace test\labo86\hapi\local;
 
 
-use edwrodrig\exception_with_data\ExceptionWithData;
-use edwrodrig\hapi_core\BuiltInServer;
+use labo86\exception_with_data\ExceptionWithData;
+use labo86\hapi_core\BuiltInServer;
 use PHPUnit\Framework\TestCase;
 
 class ControllerTest extends TestCase

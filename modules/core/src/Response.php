@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace edwrodrig\hapi_core;
+namespace labo86\hapi_core;
 
 abstract class Response
 {

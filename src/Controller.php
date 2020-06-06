@@ -2,11 +2,11 @@
 declare(strict_types=1);
 
 
-namespace edwrodrig\hapi;
+namespace labo86\hapi;
 
-use edwrodrig\hapi_core\Request;
-use edwrodrig\hapi_core\ResponseJson;
-use edwrodrig\hapi_core\ServiceMap;
+use labo86\hapi_core\Request;
+use labo86\hapi_core\ResponseJson;
+use labo86\hapi_core\ServiceMap;
 use Throwable;
 
 class Controller

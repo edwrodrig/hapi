@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-use edwrodrig\hapi\Controller;
-use edwrodrig\hapi_core\Request;
-use edwrodrig\hapi_core\Response;
-use edwrodrig\hapi_core\ResponseJson;
+use labo86\hapi\Controller;
+use labo86\hapi_core\Request;
+use labo86\hapi_core\Response;
+use labo86\hapi_core\ResponseJson;
 
 include_once(__DIR__ . '/../../vendor/autoload.php');
 

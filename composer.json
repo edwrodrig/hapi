@@ -1,10 +1,10 @@
 {
-  "name": "edwrodrig/hapi",
+  "name": "labo86/hapi",
   "description": "Mi nueva biblioteca para manejar HTTP requests y responses",
   "authors": [
     {
       "name": "Edwin Rodríguez-León",
-      "email": "edwrodrig@gmail.com",
+      "email": "edwrodrig6@gmail.com",
       "homepage": "http://www.edwin.cl",
       "role": "Developer"
     }
@@ -13,7 +13,7 @@
   "minimum-stability": "stable",
   "require": {
     "php": "^7.4",
-    "edwrodrig/exception_with_data" : "^1.0",
+    "labo86/exception_with_data" : "^1.0",
     "ext-json": "*"
   },
   "require-dev": {
@@ -22,17 +22,17 @@
   },
   "autoload": {
     "psr-4": {
-      "edwrodrig\\hapi\\": "src/",
-      "edwrodrig\\hapi_core\\": "modules/core/src/"
+      "labo86\\hapi\\": "src/",
+      "labo86\\hapi_core\\": "modules/core/src/"
     },
     "exclude-from-classmap": ["modules/core/src/BuiltInServer.php"]
   },
   "autoload-dev": {
     "psr-4": {
-      "test\\edwrodrig\\hapi\\": "tests/",
-      "test\\edwrodrig\\hapi\\local\\": "tests/local/",
-      "test\\edwrodrig\\hapi_core\\": "modules/core/tests/",
-      "test\\edwrodrig\\hapi_core\\local\\": "modules/core/tests/local/"
+      "test\\labo86\\hapi\\": "test/",
+      "test\\labo86\\hapi\\local\\": "test/local/",
+      "test\\labo86\\hapi_core\\": "modules/core/test/",
+      "test\\labo86\\hapi_core\\local\\": "modules/core/test/local/"
     },
     "files" : [
       "modules/core/src/BuiltInServer.php"
@@ -44,8 +44,8 @@
       "/.idea",
       "/examples",
       "/scripts",
-      "/tests",
-      "/modules/core/tests",
+      "/test",
+      "/modules/core/test",
       "/.gitignore",
       "/.phpunit.result.cache",
       "/phpunit.xml.dist",

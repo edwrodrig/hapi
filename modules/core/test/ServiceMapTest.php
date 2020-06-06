@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace test\edwrodrig\hapi_core;
+namespace test\labo86\hapi_core;
 
-use edwrodrig\exception_with_data\ExceptionWithData;
-use edwrodrig\hapi_core\ServiceMap;
+use labo86\exception_with_data\ExceptionWithData;
+use labo86\hapi_core\ServiceMap;
 use PHPUnit\Framework\TestCase;
 
 class ServiceMapTest extends TestCase

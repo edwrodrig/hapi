@@ -2,8 +2,8 @@
 <phpunit bootstrap="./vendor/autoload.php">
     <testsuites>
         <testsuite name="main">
-            <directory>./modules/core/tests/local</directory>
-            <directory>./tests/local</directory>
+            <directory>./modules/core/test/local</directory>
+            <directory>./test/local</directory>
         </testsuite>
     </testsuites>
 </phpunit>

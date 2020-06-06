@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace test\edwrodrig\hapi_core;
+namespace test\labo86\hapi_core;
 
-use edwrodrig\hapi_core\Request;
+use labo86\hapi_core\Request;
 use PHPUnit\Framework\TestCase;
 
 class RequestTest extends TestCase

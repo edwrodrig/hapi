@@ -2,11 +2,10 @@
 <phpunit bootstrap="./vendor/autoload.php">
     <testsuites>
         <testsuite name="main">
-            <directory>./tests</directory>
-            <directory>./modules/core/tests</directory>
-            <exclude>./tests/local</exclude>
-            <exclude>./modules/core/tests/local</exclude>
-
+            <directory>./test</directory>
+            <directory>./modules/core/test</directory>
+            <exclude>./test/local</exclude>
+            <exclude>./modules/core/test/local</exclude>
         </testsuite>
     </testsuites>
     <filter>

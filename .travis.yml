@@ -8,7 +8,7 @@ install:
   - travis_retry composer install --no-interaction --prefer-source
 
 before_script:
-  # make sure git tests do not complain about user/email not being set
+  # make sure git test do not complain about user/email not being set
   - git config --global user.name travis-ci
   - git config --global user.email travis@example.com
 
