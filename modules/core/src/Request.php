@@ -8,7 +8,10 @@ use labo86\exception_with_data\ExceptionWithData;
 /**
  * Class Request.
  * Esta clase representa un request recibido.
- * Está hecha para facilitar la detección de un parametro con nombre method que peude venir como POST o GET.
+ * Está hecha para facilitar la detección de un parametro con nombre method que puede venir como POST o GET.
+ * Para obtener parametros use el metodo {@see getParameter()} que obtendra los apraemtros que vienen por GET o por POST según sea el caso.
+ * Los parametros que vienen por $FILE se recuperan con los métodos {@see getFileParameter()} si es un file input que selecciona un archivo
+ * o {@see getFileListParameter()}  si el file input soporta multiples archivos.
  *
  * @package labo86\hapi_core
  */
@@ -103,6 +106,13 @@ class Request
 
     /**
      * Obtiene un parametro que viene de un input file. El input file tiene que ser un archivo solo.
+     * Este archivo devuelve un arreglo con los datos que vienen de $FILE que.
+     * El array tiene las siguientes llaves:
+     *  - name
+     *  - type
+     *  - tmp_name
+     *  - size
+     * Para mes información ver {@see https://www.php.net/manual/es/features.file-upload.post-method.php}
      * @param string $name
      * @return array|string[]
      * @throws ExceptionWithData
@@ -127,6 +137,13 @@ class Request
 
     /**
      * Obtener multiples archivos desde un input file pasado en la variable $_FILES
+     * Muy similar a {@see getFileParameter()} pero que funciona para file input multiples.
+     * Entrega una array con array de ficheros con las llaves:
+     *  - name
+     *  - type
+     *  - tmp_name
+     *  - size
+     * Lanza excepciones si existe un error.
      * @param string $name
      * @return array
      * @throws ExceptionWithData
