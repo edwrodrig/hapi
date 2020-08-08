@@ -43,7 +43,7 @@ class Controller
     public function run() {
         try {
             $request = $this->getRequest();
-            $method = $request->getMethod();
+            $method = $request->getParameter('method');
 
             $response = $this->service_map->getService($method)($request);
             $response->send();

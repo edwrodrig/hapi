@@ -30,9 +30,9 @@ class RequestTest extends TestCase
     public function getMethodProvider()
     {
         return [
-            [[], "", ""],
+            [[], '{"message":"request does not have parameter","data":{"parameter_name":"method","available_parameter_list":[]}}', ""],
             [["method" => "action"], "action", "?method=action"],
-            [["param" => "action"], "", "?param=action"],
+            [["param" => "action"], '{"message":"request does not have parameter","data":{"parameter_name":"method","available_parameter_list":{"param":"action"}}}', "?param=action"],
             [["method" => "action", "param" => "content"], "action", "?method=action&param=content"]
         ];
     }
@@ -90,6 +90,44 @@ class RequestTest extends TestCase
 
         $response = self::$server->makeRequest('get_params.php', $context);
         $this->assertJsonStringToArray(["method" => "action", "param" => "content"], $response);
+    }
+
+    /**
+     * @throws ExceptionWithData
+     */
+    public function testJsonRequestNotAnArray()
+    {
+        $context  = [
+            'header'  => "Content-type: application/json\r\n",
+            'method'  => 'POST',
+            'content' => json_encode("hola")
+        ];
+
+
+        $response = self::$server->makeRequest('get_method.php', $context);
+
+        $this->assertJsonStringToArray(['message' => 'json in post is not an array', 'data' => ['contents' => '"hola"']], $response);
+
+    }
+
+    /**
+     * @throws ExceptionWithData
+     */
+    public function testJsonRequestNotAValidJson()
+    {
+        $context  = [
+            'header'  => "Content-type: application/json\r\n",
+            'method'  => 'POST',
+            'content' => '{id}'
+        ];
+
+
+        $response = self::$server->makeRequest('get_method.php', $context);
+
+        $json_response = json_decode($response, true);
+        $this->assertEquals(['contents' => '{id}'], $json_response['data']);
+        $this->assertJsonStringToArray(['message' => 'post content is not a valid json', 'data' => ['contents' => '{id}']], $response);
+
     }
 
 }

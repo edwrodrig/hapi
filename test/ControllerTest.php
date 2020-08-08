@@ -78,7 +78,7 @@ class ControllerTest extends TestCase
         $controller = $this->getControllerForTest(['method' => 'echo']);
 
         $controller->getServiceMap()->registerService('echo', function(Request $request) : Response {
-             return new ResponseJson(['method' => $request->getMethod(), 'return' => 'something']);
+             return new ResponseJson(['method' => $request->getParameter('method'), 'return' => 'something']);
         });
 
         $response = $this->assertResponseJson($controller);

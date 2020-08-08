@@ -18,7 +18,7 @@ try {
     /**
      * Este no es el método http sino un parámetro para saber que servicio utilizar.
      */
-    $method = $request->getMethod();
+    $method = $request->getParameter('method');
 
     /** Se construye el ServiceMap */
     $services = new ServiceMap();

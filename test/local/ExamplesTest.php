@@ -26,7 +26,7 @@ class ExamplesTest extends TestCase
 
         $response = $server->makeRequest('index.php');
         $this->assertJsonStringToArray([
-            'error' => 'service not registered',
+            'error' => 'request does not have parameter',
             'try_this' => 'http://localhost:8080/index.php?method=echo'
         ],  $response);
 

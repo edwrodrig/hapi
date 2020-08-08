@@ -5,22 +5,16 @@ namespace labo86\hapi_core;
 
 use labo86\exception_with_data\ExceptionWithData;
 
+/**
+ * Class Request.
+ * Esta clase representa un request recibido.
+ * Está hecha para facilitar la detección de un parametro con nombre method que peude venir como POST o GET.
+ *
+ * @package labo86\hapi_core
+ */
 class Request
 {
      protected array $parameter_list;
-
-    /**
-     * @codeCoverageIgnore
-     */
-     public function __construct() {
-         $request_method = $this->getServerVariable('REQUEST_METHOD');
-         if ( $request_method == "GET" ) {
-             $this->parameter_list = $_GET;
-         } else if ( $request_method == "POST" ) {
-             $this->parameter_list = $this->getPostParameterList();
-         }
-
-     }
 
     /**
      * @codeCoverageIgnore
@@ -33,29 +27,37 @@ class Request
 
 
     /**
-     * Obtiene un parametros desde un nombre.
-     * Este debee star en la variable GET o POST ya que busca en que que se encuentra es {@see $parameter_list} que es poblado en el constructor
+     * Obtiene un parámetros desde un nombre.
+     * Este debe estar en la variable GET o POST ya que busca en en el resultado de {@see $parameter_list} que es poblado en el constructor
      * @param string $parameter_name
      * @return string
      * @throws ExceptionWithData
      */
     public function getParameter(string $parameter_name) : string {
-        if ( !isset($this->parameter_list[$parameter_name]) )
-            throw new ExceptionWithData('request does not have parameter', [ 'parameter_name' => $parameter_name, 'available_parameters' => $this->parameter_list ]);
+        $parameter_list = $this->getParameterList();
+        if ( !isset($parameter_list[$parameter_name]) )
+            throw new ExceptionWithData('request does not have parameter', [ 'parameter_name' => $parameter_name, 'available_parameter_list' => $parameter_list ]);
         else
-            return $this->parameter_list[$parameter_name];
-    }
-
-    public function getMethod() : string {
-        return $this->getParameterList()['method'] ?? '';
+            return $parameter_list[$parameter_name];
     }
 
     /**
+     * Obtiene los parametros GET y POST según sea la naturaleza del request.
+     * En el caso de obtener las variables POST usa el metodo {@see getPostParameterList()}.
+     * El request se obtiene de la variable de servidor {@see https://www.php.net/manual/es/reserved.variables.server.php REQUEST_METHOD}.
+     *  Este metodo es lazy. Solo necesita cargarse una vez.
      * @codeCoverageIgnore
      * @return array
      */
     public function getParameterList() : array {
-         return $this->parameter_list;
+        if ( !isset($this->parameter_list) ) {
+            $request_method = $this->getServerVariable('REQUEST_METHOD');
+            if ( $request_method == "GET" )
+                $this->parameter_list = $_GET;
+            else if ( $request_method == "POST" )
+               $this->parameter_list = $this->getPostParameterList();
+        }
+        return $this->parameter_list;
     }
 
     public function getContentType() : string {
@@ -65,14 +67,28 @@ class Request
     }
 
     /**
+     * Obtienen los parámetros pasados por post. Si el contenido del request es un objeto json entonces usas sus valores como  los parametros de POST,
+     * en caso contrario usa directamente la variable POST. A[un no se valida que el json sea un objeto.
+     * Esta función es usada por {@see getParameterList()}
+     *
      * @codeCoverageIgnore
+     * @throws ExceptionWithData
      */
     protected function getPostParameterList() : array {
         $content_type = $this->getContentType();
 
         if ( $content_type == "application/json" ) {
             $contents = file_get_contents("php://input");
-            return json_decode($contents, true);
+            $decoded_json = json_decode($contents, true);
+
+            if ( $decoded_json === null )
+                throw new ExceptionWithData('post content is not a valid json', ['contents' => $contents]);
+
+            if ( !is_array($decoded_json) )
+                throw new ExceptionWithData('json in post is not an array', ['contents' => $contents]);
+
+            return $decoded_json;
+
         } else {
             return $_POST;
         }

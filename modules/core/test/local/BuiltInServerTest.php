@@ -9,6 +9,12 @@ use PHPUnit\Framework\TestCase;
 
 class BuiltInServerTest extends TestCase
 {
+
+    public function assertJsonStringToArray(array $expected, string $actual, string $message = "") {
+        $this->assertJson($actual);
+        $this->assertEquals($expected, json_decode($actual, true), $message);
+    }
+
     /**
      * @throws ExceptionWithData
      */
@@ -19,7 +25,7 @@ class BuiltInServerTest extends TestCase
 
         $response = $server->makeRequest('get_method.php');
 
-        $this->assertEquals("", $response);
+        $this->assertJsonStringToArray(['message' => 'request does not have parameter', 'data' => ['parameter_name' => 'method', 'available_parameter_list' => []]], $response);
 
         $this->assertStringContainsString('[200]: GET /get_method.php', $server->getStdErr());
     }
