@@ -102,6 +102,7 @@ class Request
     }
 
     /**
+     * Obtiene un parametro que viene de un input file. El input file tiene que ser un archivo solo.
      * @param string $name
      * @return array|string[]
      * @throws ExceptionWithData
