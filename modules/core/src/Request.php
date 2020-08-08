@@ -118,10 +118,10 @@ class Request
             throw new ExceptionWithData('file input is not a valid single file', [ 'data' => $file_input]);
 
         return [
-            'name' => $file_input[$name]['name'],
-            'type' => $file_input[$name]['type'],
-            'tmp_name' => $file_input[$name]['tmp_name'],
-            'size' => $file_input[$name]['size'],
+            'name' => $file_input['name'],
+            'type' => $file_input['type'],
+            'tmp_name' => $file_input['tmp_name'],
+            'size' => $file_input['size'],
         ];
     }
 
@@ -141,7 +141,7 @@ class Request
         if ( !is_array($file_list_input['name']))
             throw new ExceptionWithData('file input is not a valid multiple file', [ 'data' => $file_list_input]);
 
-        $file_count = count($file_list_input);
+        $file_count = count($file_list_input['name']);
         $file_list = [];
         for ( $i = 0 ; $i < $file_count ; $i++ ) {
             $file_list[] = [

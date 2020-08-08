@@ -130,4 +130,238 @@ class RequestTest extends TestCase
 
     }
 
+    /**
+     * @see https://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.2
+     * @throws ExceptionWithData
+     */
+    public function testMultipartRequestMethod()
+    {
+        $context  = [
+            'header'  => "Content-Type: multipart/form-data; boundary=BOUNDARY\r\n",
+            'method'  => 'POST',
+            'content' =>
+"--BOUNDARY\r\n" .
+"Content-Disposition: form-data; name=\"method\"\r\n" .
+"\r\n" .
+"action\r\n" .
+"--BOUNDARY\r\n" .
+"Content-Disposition: form-data; name=\"filename\"\r\n" .
+"Content-Type: application/xml;version=1.0;charset=UTF-8\r\n" .
+"\r\n" .
+"<xml>content</xml>\r\n" .
+"--BOUNDARY--\r\n"
+        ];
+
+
+        $response = self::$server->makeRequest('get_method.php', $context);
+        $this->assertEquals("action", $response);
+
+    }
+
+    /**
+     * @see https://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.2
+     * @throws ExceptionWithData
+     */
+    public function testMultipartRequestMethod2()
+    {
+        $context  = [
+            'header'  => "Content-Type: multipart/form-data; boundary=BOUNDARY\r\n",
+            'method'  => 'POST',
+            'content' => <<<EOF
+--BOUNDARY
+Content-Disposition: form-data; name="method"
+
+action
+--BOUNDARY--
+EOF
+        ];
+
+
+        $response = self::$server->makeRequest('get_method.php', $context);
+        $this->assertEquals("action", $response);
+
+    }
+
+    /**
+     * @see https://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.2
+     * @throws ExceptionWithData
+     */
+    public function testMultipartRequestFile()
+    {
+        $context  = [
+            'header'  => "Content-Type: multipart/form-data; boundary=BOUNDARY\r\n",
+            'method'  => 'POST',
+            'content' => <<<EOF
+--BOUNDARY
+Content-Disposition: form-data; name="method"
+
+action
+--BOUNDARY
+Content-Disposition: form-data; name="file"; filename="something.txt"
+Content-Type: text/plain
+
+hello world
+--BOUNDARY--
+EOF
+        ];
+
+
+        $response = self::$server->makeRequest('get_file.php', $context);
+        $json_data = json_decode($response, true);
+        $this->assertArrayHasKey('file', $json_data);
+        $file_data = $json_data['file'];
+        $this->assertArrayHasKey('tmp_name', $file_data);
+        unset($file_data['tmp_name']);
+        $this->assertEquals([
+            'name' => 'something.txt',
+            'type' => 'text/plain',
+            'size' => 11]
+            ,$file_data);
+
+    }
+
+    /**
+     * Cuando no tiene filename, no usa el filename
+     * @throws ExceptionWithData
+     */
+    public function testMultipartRequestFileWithoutFilename()
+    {
+        $context  = [
+            'header'  => "Content-Type: multipart/form-data; boundary=BOUNDARY\r\n",
+            'method'  => 'POST',
+            'content' => <<<EOF
+--BOUNDARY
+Content-Disposition: form-data; name="method"
+
+action
+--BOUNDARY
+Content-Disposition: form-data; name="file"
+Content-Type: text/plain
+
+hello world
+--BOUNDARY--
+EOF
+        ];
+
+
+        $response = self::$server->makeRequest('get_file.php', $context);
+        $json_data = json_decode($response, true);
+        $this->assertArrayHasKey('file', $json_data);
+        $file_data = $json_data['file'];
+        $this->assertArrayNotHasKey('tmp_name', $file_data);
+        $this->assertEquals([
+            'message' => 'file input not found in post params',
+            'data' => ['name' =>  'file', 'files' => []]]
+            ,$file_data);
+
+    }
+
+    /**
+     * Sen prueba el envio con un archivo
+     * @throws ExceptionWithData
+     */
+    public function testMultipartRequestFileListOnylOne()
+    {
+        $context  = [
+            'header'  => "Content-Type: multipart/form-data; boundary=BOUNDARY\r\n",
+            'method'  => 'POST',
+            'content' => <<<EOF
+--BOUNDARY
+Content-Disposition: form-data; name="method"
+
+action
+--BOUNDARY
+Content-Disposition: form-data; name="file_list[]"; filename="something.txt"
+Content-Type: text/plain
+
+hello world
+--BOUNDARY--
+EOF
+        ];
+
+
+        $response = self::$server->makeRequest('get_file.php', $context);
+        $json_data = json_decode($response, true);
+        $this->assertArrayHasKey('file_list', $json_data);
+        $file_list_data = $json_data['file_list'];
+        $this->assertCount(1, $file_list_data);
+        $file_data = $file_list_data[0];
+        $this->assertArrayHasKey('tmp_name', $file_data);
+        unset($file_data['tmp_name']);
+        $this->assertEquals([
+                'name' => 'something.txt',
+                'type' => 'text/plain',
+                'size' => 11]
+            ,$file_data);
+
+    }
+
+    /**
+     * Sen prueba el envio con un archivo
+     * @throws ExceptionWithData
+     */
+    public function testMultipartRequestFileListMultipleOne()
+    {
+        $context  = [
+            'header'  => "Content-Type: multipart/form-data; boundary=BOUNDARY\r\n",
+            'method'  => 'POST',
+            'content' => <<<EOF
+--BOUNDARY
+Content-Disposition: form-data; name="method"
+
+action
+--BOUNDARY
+Content-Disposition: form-data; name="file_list[]"; filename="something.txt"
+Content-Type: text/plain
+
+hello world
+--BOUNDARY
+Content-Disposition: form-data; name="file_list[]"; filename="other.txt"
+Content-Type: text/plain
+
+hello world!
+--BOUNDARY
+Content-Disposition: form-data; name="file_list[]"; filename="other2.txt"
+Content-Type: text/plain
+
+hello world!!
+--BOUNDARY--
+EOF
+        ];
+
+
+        $response = self::$server->makeRequest('get_file.php', $context);
+        $json_data = json_decode($response, true);
+        $this->assertArrayHasKey('file_list', $json_data);
+        $file_list_data = $json_data['file_list'];
+        $this->assertCount(3, $file_list_data);
+        $file_data = $file_list_data[0];
+        $this->assertArrayHasKey('tmp_name', $file_data);
+        unset($file_data['tmp_name']);
+        $this->assertEquals([
+                'name' => 'something.txt',
+                'type' => 'text/plain',
+                'size' => 11]
+            ,$file_data);
+
+        $file_data = $file_list_data[1];
+        $this->assertArrayHasKey('tmp_name', $file_data);
+        unset($file_data['tmp_name']);
+        $this->assertEquals([
+                'name' => 'other.txt',
+                'type' => 'text/plain',
+                'size' => 12]
+            ,$file_data);
+
+        $file_data = $file_list_data[2];
+        $this->assertArrayHasKey('tmp_name', $file_data);
+        unset($file_data['tmp_name']);
+        $this->assertEquals([
+                'name' => 'other2.txt',
+                'type' => 'text/plain',
+                'size' => 13]
+            ,$file_data);
+
+    }
+
 }
