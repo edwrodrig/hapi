@@ -14,7 +14,7 @@ $controller->getServiceMap()
     ->registerService('echo', function(Request $request) : Response {
         return new ResponseJson([
             'message' => 'successful',
-            'request_params' => $request->getParams()
+            'request_params' => $request->getParameterList()
         ]);
     });
 

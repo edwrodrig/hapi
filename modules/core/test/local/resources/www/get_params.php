@@ -10,4 +10,4 @@ include_once(__DIR__ . '/../../../../../../vendor/autoload.php');
 
 $server_info = new Request();
 
-echo json_encode($server_info->getParams(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+echo json_encode($server_info->getParameterList(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);

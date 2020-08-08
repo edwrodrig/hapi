@@ -32,11 +32,11 @@ class ControllerTest extends TestCase
     {
         $request = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['getParams'])
+            ->onlyMethods(['getParameterList'])
             ->getMock();
 
         $request->expects($this->any())
-            ->method('getParams')
+            ->method('getParameterList')
             ->willReturn($params);
 
         $controller = $this->getMockBuilder(Controller::class)

@@ -13,12 +13,12 @@ class RequestTest extends TestCase
     {
 
         $stub = $this->getMockBuilder(Request::class)
-            ->onlyMethods(['getParams'])
+            ->onlyMethods(['getParameterList'])
             ->disableOriginalConstructor()
             ->getMock();
 
         $stub->expects($this->any())
-            ->method('getParams')
+            ->method('getParameterList')
             ->willReturn(['method' => 'something']);
 
         /** @var Request $stub */
@@ -30,12 +30,12 @@ class RequestTest extends TestCase
     {
 
         $stub = $this->getMockBuilder(Request::class)
-            ->onlyMethods(['getParams'])
+            ->onlyMethods(['getParameterList'])
             ->disableOriginalConstructor()
             ->getMock();
 
         $stub->expects($this->any())
-            ->method('getParams')
+            ->method('getParameterList')
             ->willReturn([]);
 
         /** @var Request $stub */
