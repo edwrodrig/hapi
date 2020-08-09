@@ -6,9 +6,11 @@ namespace labo86\hapi;
 
 use labo86\exception_with_data\ExceptionWithData;
 use labo86\hapi_core\Request;
+use ReflectionFunctionAbstract;
 use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionType;
+use Throwable;
 
 class ServiceFunctionReflector
 {
@@ -28,12 +30,49 @@ class ServiceFunctionReflector
         }
     */
 
+    /**
+     * @param ReflectionFunctionAbstract $reflection_function
+     * @return array
+     * @throws ExceptionWithData
+     */
+    public static function getParameterInfoList(ReflectionFunctionAbstract $reflection_function) : array {
+        $reflection_parameter_list = $reflection_function->getParameters();
+
+        $parameter_info_list = [];
+        $exception_list = [];
+        foreach ( $reflection_parameter_list as $reflection_parameter ) {
+            try {
+                $parameter_info_list[] = self::getParameterInfo($reflection_parameter);
+            } catch ( Throwable $exception ) {
+                $exception_list[] = $exception;
+            }
+        }
+
+        if ( !empty($exception_list) ) {
+            throw new ExceptionWithData('some services parameter types are not supported',
+            [
+               'function' => $reflection_function->getName(),
+               'filename' => $reflection_function->getFileName(),
+               'line' => $reflection_function->getStartLine(),
+               'exception_list' => $exception_list
+            ]);
+        }
+        return $parameter_info_list;
+    }
+
+
     public static function getParameterInfo(ReflectionParameter $parameter) : array {
 
         $name = $parameter->getName();
 
         $reflection_type = $parameter->getType();
-        $type = is_null($reflection_type) ? 'string' : self::getParameterType($reflection_type);
+        try {
+            $type = is_null($reflection_type) ? 'string' : self::getParameterType($reflection_type);
+        } catch ( ExceptionWithData $exception ) {
+            throw new ExceptionWithData($exception->getMessage(), [
+                'name' => $name
+            ], $exception);
+        }
 
         return [
             'name' => $name,
@@ -42,7 +81,8 @@ class ServiceFunctionReflector
     }
 
     /**
-     * Obtiene un tipo desde un
+     * Obtiene un tipo desde un tipo de un parámetro.
+     * El resultado es un string que dice como se debe tratar dicha entrada o que se debe hacer con el o validar.
      * @param ReflectionType|null $type
      * @return string
      * @throws ExceptionWithData
@@ -54,7 +94,7 @@ class ServiceFunctionReflector
             else if ( $type->getName() === 'array') return 'array';
             else if ( $type->getName() === 'int' ) return 'int';
             else if ( $type->getName() === Request::class ) return Request::class;
-            else throw new ExceptionWithData('service parameter type is unsupported', [
+            else throw new ExceptionWithData('service parameter type is not supported', [
                 'type' => $type->getName()
             ]);
         } else {
