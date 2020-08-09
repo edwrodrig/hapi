@@ -7,6 +7,7 @@ namespace labo86\hapi;
 use labo86\hapi_core\Request;
 use labo86\hapi_core\ResponseJson;
 use labo86\hapi_core\ServiceMap;
+use ReflectionType;
 use Throwable;
 
 class Controller
