@@ -6,6 +6,7 @@ namespace test\labo86\hapi;
 use labo86\exception_with_data\ExceptionWithData;
 use labo86\hapi\ServiceFunctionReflector;
 use labo86\hapi_core\Request;
+use labo86\hapi_core\ResponseJson;
 use PHPUnit\Framework\TestCase;
 use ReflectionException;
 use ReflectionFunction;
@@ -173,6 +174,37 @@ class ServiceFunctionReflectorTest extends TestCase
             ->willReturn(['value' => $value]);
 
         $this->assertEquals([$expected], ServiceFunctionReflector::getParameterValueListFromRequest($stub, [['name' => 'value', 'type' => $type]]));
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @throws ReflectionException
+     * Esto prueba las function callback de servicio
+     */
+    public function testCreateServiceCallback() {
+        $callback = function(int $a, int $b) {
+            return $a + $b;
+        };
+
+        $reflection_function = new ReflectionFunction($callback);
+        $service_callback = ServiceFunctionReflector::createServiceCallback($reflection_function);
+
+        $stub = $this->getMockBuilder(Request::class)
+            ->onlyMethods(['getParameterList'])
+            ->getMock();
+
+        $stub->expects($this->any())
+            ->method('getParameterList')
+            ->willReturn(['a' => '2', 'b' => '5']);
+
+        $response = $service_callback($stub);
+        $this->assertInstanceOf(ResponseJson::class, $response);
+        ob_start();
+        $response->send();
+        $json_data = ob_get_clean();
+        $recovered_data = json_decode($json_data, true);
+        $this->assertEquals(7, $recovered_data);
+
     }
 
 }

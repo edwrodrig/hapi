@@ -4,8 +4,12 @@ declare(strict_types=1);
 namespace labo86\hapi;
 
 
+use Closure;
 use labo86\exception_with_data\ExceptionWithData;
 use labo86\hapi_core\Request;
+use labo86\hapi_core\Response;
+use labo86\hapi_core\ResponseJson;
+use ReflectionFunction;
 use ReflectionFunctionAbstract;
 use ReflectionNamedType;
 use ReflectionParameter;
@@ -147,5 +151,24 @@ class ServiceFunctionReflector
         }
         return $parameter_list;
 
+    }
+
+    /**
+     * @param ReflectionFunctionAbstract $reflection_function
+     * @return Closure
+     * @throws ExceptionWithData
+     */
+    public static function createServiceCallback(ReflectionFunctionAbstract $reflection_function) {
+        $parameter_info_list = ServiceFunctionReflector::getParameterInfoList($reflection_function);
+
+        return function(Request $request) use ($reflection_function, $parameter_info_list) {
+            $parameter_value_list = ServiceFunctionReflector::getParameterValueListFromRequest($request, $parameter_info_list);
+            $response = $reflection_function->invoke(...$parameter_value_list);
+
+            if ( !$response instanceof Response )
+                $response = new ResponseJson($response);
+
+            return $response;
+        };
     }
 }

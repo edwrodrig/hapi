@@ -15,8 +15,12 @@ function sum(int $a, int $b) : int {
     return $a + $b;
 }
 
+function concat(string $first, string $second) : string {
+    return $first . "-" . $second;
+}
+
 $controller = new Controller();
-$controller->registerFunction('sum');
+$controller->registerFunctionsInFile(__FILE__);
 
 $controller->getServiceMap()
     ->registerService('echo', function(Request $request) : Response {
