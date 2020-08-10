@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace labo86\hapi_core;
 
 use labo86\exception_with_data\ExceptionWithData;
+use labo86\hapi\InputFile;
+use labo86\hapi\InputFileList;
 
 /**
  * Class Request.
@@ -113,28 +115,30 @@ class Request
     protected function getFileParameterList() : array {
         return $_FILES;
     }
-/*
-    public function getBoolParameter(string $name) : bool {
+
+    public function getIntParameter(string $name) : int
+    {
         $value = $this->getParameter($name);
 
-    }
-
-    public function getIntParameter(string $name) : int {
-        $value = $this->getParameter($name);
-        $int_value = intval($value);
-        if ( $int_value === )
-            throw new ExceptionWithData('parameter is not a string', [
+        if ( is_numeric($value) &&
+            (is_int($value) || preg_match("#^(-[0-9]+|[0-9]+)$#", $value))
+        )
+            return intval($value);
+        else {
+            throw new ExceptionWithData('parameter is not an integer', [
                 'name' => $name,
                 'type' => gettype($value),
                 'value' => $value
             ]);
-        } else if ( is_numeric())
-        } else {
-            return strval($value);
         }
     }
-    */
 
+
+    /**
+     * @param string $name
+     * @return string
+     * @throws ExceptionWithData
+     */
     public function getStringParameter(string $name) : string {
         $value = $this->getParameter($name);
         if ( is_array($value) ) {
@@ -147,7 +151,7 @@ class Request
             throw new ExceptionWithData('parameter is not a string', [
                 'name' => $name,
                 'type' => gettype($value),
-                'value' => print_r($value, true)
+                'value' => $value
             ]);
         } else if ( is_bool($value)) {
             throw new ExceptionWithData('parameter is not a string', [
@@ -159,18 +163,27 @@ class Request
             return strval($value);
         }
     }
-/*
-    public function getArrayParameter(string $name) : array {
-        if ( $this->hasParameter($name) ) {
-            $value = $this->getParameter($name);
 
-        } else if ( $this->hasFileParameter($name))
-            $this->getFil
-        }
-    }
-*/
     /**
-     * Obtiene un parametro que viene de un input file. El input file tiene que ser un archivo solo.
+     * @param string $name
+     * @return array
+     * @throws ExceptionWithData
+     */
+    public function getArrayParameter(string $name) : array {
+        $value = $this->getParameter($name);
+        if ( is_array($value))
+                return $value;
+        else
+            throw new ExceptionWithData('parameter is not an array', [
+            'name' => $name,
+            'type' => gettype($value),
+            'value' => $value
+        ]);
+
+    }
+
+    /**
+     * Obtiene un parámetro que viene de un input file. El input file tiene que ser un archivo solo.
      * Este archivo devuelve un arreglo con los datos que vienen de $FILE que.
      * El array tiene las siguientes llaves:
      *  - name
@@ -179,25 +192,25 @@ class Request
      *  - size
      * Para mes información ver {@see https://www.php.net/manual/es/features.file-upload.post-method.php}
      * @param string $name
-     * @return array|string[]
+     * @return InputFile
      * @throws ExceptionWithData
      */
-    public function getFileParameter(string $name) : array {
+    public function getFileParameter(string $name) : InputFile {
         $files = $this->getFileParameterList();
         if ( !$this->hasFileParameter($name) )
-            throw new ExceptionWithData('file input not found in post params', [ 'name' => $name, 'files' => $files ]);
+            throw new ExceptionWithData('request does not have parameter', [ 'parameter_name' => $name, 'available_parameter_list' => $files ]);
 
         $file_input = $files[$name];
 
-        if ( !is_string($file_input['name']))
-            throw new ExceptionWithData('file input is not a valid single file', [ 'data' => $file_input]);
+        if ( !is_string($file_input['name']) )
+            throw new ExceptionWithData('parameter is not a single file input', [
+                'name' => $name,
+                'type' => gettype($file_input),
+                'value' => $file_input
+            ]
+            );
 
-        return [
-            'name' => $file_input['name'],
-            'type' => $file_input['type'],
-            'tmp_name' => $file_input['tmp_name'],
-            'size' => $file_input['size'],
-        ];
+        return new InputFile($file_input);
     }
 
     /**
@@ -210,29 +223,24 @@ class Request
      *  - size
      * Lanza excepciones si existe un error.
      * @param string $name
-     * @return array
+     * @return InputFileList
      * @throws ExceptionWithData
      */
-    public function getFileListParameter(string $name) : array {
+    public function getFileListParameter(string $name) : InputFileList {
         $files = $this->getFileParameterList();
         if ( !$this->hasFileParameter($name) )
-            throw new ExceptionWithData('file input not found in post params', [ 'name' => $name, 'files' => $files ]);
+            throw new ExceptionWithData('request does not have parameter', [ 'parameter_name' => $name, 'available_parameter_list' => $files ]);
 
         $file_list_input = $files[$name];
 
         if ( !is_array($file_list_input['name']))
-            throw new ExceptionWithData('file input is not a valid multiple file', [ 'data' => $file_list_input]);
+            throw new ExceptionWithData('parameter is not a multiple file input', [
+                    'name' => $name,
+                    'type' => gettype($file_list_input),
+                    'value' => $file_list_input
+                ]
+            );
 
-        $file_count = count($file_list_input['name']);
-        $file_list = [];
-        for ( $i = 0 ; $i < $file_count ; $i++ ) {
-            $file_list[] = [
-                'name' => $file_list_input['name'][$i],
-                'type' => $file_list_input['type'][$i],
-                'tmp_name' => $file_list_input['tmp_name'][$i],
-                'size' => $file_list_input['size'][$i],
-            ];
-        }
-        return $file_list;
+        return new InputFileList($file_list_input);
     }
 }

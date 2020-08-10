@@ -15,13 +15,14 @@ $server_info = new Request();
 $response = [];
 
 try {
-    $response['file'] = $server_info->getFileParameter('file');
+    $response['file'] = $server_info->getFileParameter('file')->getData();
 } catch ( ExceptionWithData $exception ) {
     $response['file'] = [ 'message' => $exception->getMessage(), 'data' => $exception->getData()];
 }
 
 try {
-    $response['file_list'] =  $server_info->getFileListParameter('file_list');
+    foreach ( $server_info->getFileListParameter('file_list')  as $file )
+        $response['file_list'][] = $file->getData();
 } catch ( ExceptionWithData $exception ) {
     $response['file_list'] = [ 'message' => $exception->getMessage(), 'data' => $exception->getData()];
 }

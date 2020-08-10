@@ -93,6 +93,8 @@ class ServiceFunctionReflector
             else if ( $type->getName() === 'bool' ) return 'bool';
             else if ( $type->getName() === 'array') return 'array';
             else if ( $type->getName() === 'int' ) return 'int';
+            else if ( $type->getName() === InputFile::class ) return InputFile::class;
+            else if ( $type->getName() === InputFileList::class ) return InputFileList::class;
             else if ( $type->getName() === Request::class ) return Request::class;
             else throw new ExceptionWithData('service parameter type is not supported', [
                 'type' => $type->getName()

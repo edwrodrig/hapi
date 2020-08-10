@@ -215,7 +215,8 @@ EOF
         $this->assertEquals([
             'name' => 'something.txt',
             'type' => 'text/plain',
-            'size' => 11]
+            'size' => 11,
+            'error' => 0]
             ,$file_data);
 
     }
@@ -250,8 +251,11 @@ EOF
         $file_data = $json_data['file'];
         $this->assertArrayNotHasKey('tmp_name', $file_data);
         $this->assertEquals([
-            'message' => 'file input not found in post params',
-            'data' => ['name' =>  'file', 'files' => []]]
+            'message' => 'request does not have parameter',
+            'data' => [
+                'parameter_name' => 'file',
+                'available_parameter_list' => []
+            ]]
             ,$file_data);
 
     }
@@ -260,7 +264,7 @@ EOF
      * Sen prueba el envio con un archivo
      * @throws ExceptionWithData
      */
-    public function testMultipartRequestFileListOnylOne()
+    public function testMultipartRequestFileListOnlyOne()
     {
         $context  = [
             'header'  => "Content-Type: multipart/form-data; boundary=BOUNDARY\r\n",
@@ -291,7 +295,8 @@ EOF
         $this->assertEquals([
                 'name' => 'something.txt',
                 'type' => 'text/plain',
-                'size' => 11]
+                'size' => 11,
+                'error' => 0]
             ,$file_data);
 
     }
@@ -341,7 +346,8 @@ EOF
         $this->assertEquals([
                 'name' => 'something.txt',
                 'type' => 'text/plain',
-                'size' => 11]
+                'size' => 11,
+                'error' => 0]
             ,$file_data);
 
         $file_data = $file_list_data[1];
@@ -350,7 +356,8 @@ EOF
         $this->assertEquals([
                 'name' => 'other.txt',
                 'type' => 'text/plain',
-                'size' => 12]
+                'size' => 12,
+                'error' => 0]
             ,$file_data);
 
         $file_data = $file_list_data[2];
@@ -359,7 +366,8 @@ EOF
         $this->assertEquals([
                 'name' => 'other2.txt',
                 'type' => 'text/plain',
-                'size' => 13]
+                'size' => 13,
+                'error' => 0]
             ,$file_data);
 
     }
