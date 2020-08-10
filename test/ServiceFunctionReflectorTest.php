@@ -174,4 +174,5 @@ class ServiceFunctionReflectorTest extends TestCase
 
         $this->assertEquals([$expected], ServiceFunctionReflector::getParameterValueListFromRequest($stub, [['name' => 'value', 'type' => $type]]));
     }
+
 }

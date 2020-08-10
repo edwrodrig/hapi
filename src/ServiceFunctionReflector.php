@@ -15,21 +15,6 @@ use Throwable;
 class ServiceFunctionReflector
 {
 
-    /*
-        public static function getParameterList(\ReflectionFunctionAbstract $reflection_function) {
-            $reflection_parameter_list = $reflection_function->getParameters();
-            array_map(function(\ReflectionParameter $parameter) {
-                'name' => $reflection_parameter->getName();
-                $reflection_parameter->getType()->getName();
-            })
-            foreach ( $reflection_parameter_list as $reflection_parameter ) {
-                $reflection_parameter->getName();
-                $reflection_parameter->getType();
-
-            }
-        }
-    */
-
     /**
      * @param ReflectionFunctionAbstract $reflection_function
      * @return array

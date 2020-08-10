@@ -6,9 +6,12 @@ namespace labo86\hapi_core;
 
 class ResponseJson extends Response
 {
-    protected array $data;
+    /**
+     * @var mixed
+     */
+    protected $data;
 
-    public function __construct(array $data) {
+    public function __construct($data) {
         $this->data = $data;
     }
 
