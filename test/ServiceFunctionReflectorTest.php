@@ -19,7 +19,7 @@ class ServiceFunctionReflectorTest extends TestCase
      */
     public function testGetParameterTypeBasic()
     {
-        $callback = function(string $param_0, float $param_1, Request $param_2, array $param_3, bool $param_4, int $param_5) {
+        $callback = function(string $param_0, float $param_1, Request $param_2, array $param_3, int $param_4) {
             return 1;
         };
 
@@ -28,8 +28,7 @@ class ServiceFunctionReflectorTest extends TestCase
         $this->assertEquals('string', ServiceFunctionReflector::getParameterType($parameters[0]->getType()));
         $this->assertEquals(Request::class, ServiceFunctionReflector::getParameterType($parameters[2]->getType()));
         $this->assertEquals('array', ServiceFunctionReflector::getParameterType($parameters[3]->getType()));
-        $this->assertEquals('bool', ServiceFunctionReflector::getParameterType($parameters[4]->getType()));
-        $this->assertEquals('int', ServiceFunctionReflector::getParameterType($parameters[5]->getType()));
+        $this->assertEquals('int', ServiceFunctionReflector::getParameterType($parameters[4]->getType()));
 
         try {
             ServiceFunctionReflector::getParameterType($parameters[1]->getType());
@@ -56,7 +55,6 @@ class ServiceFunctionReflectorTest extends TestCase
         $this->assertEquals(['name' => 'param_1', 'type' => 'string'], ServiceFunctionReflector::getParameterInfo($parameters[1]));
         $this->assertEquals(['name' => 'param_2', 'type' => Request::class], ServiceFunctionReflector::getParameterInfo($parameters[2]));
         $this->assertEquals(['name' => 'param_3', 'type' => 'array'], ServiceFunctionReflector::getParameterInfo($parameters[3]));
-        $this->assertEquals(['name' => 'param_4', 'type' => 'bool'], ServiceFunctionReflector::getParameterInfo($parameters[4]));
         $this->assertEquals(['name' => 'param_5', 'type' => 'int'], ServiceFunctionReflector::getParameterInfo($parameters[5]));
 
     }
@@ -66,7 +64,7 @@ class ServiceFunctionReflectorTest extends TestCase
      * @throws ReflectionException
      */
     public function testGetParameterListInfo() {
-        $callback = function(string $param_0, $param_1, Request $param_2, array $param_3, bool $param_4, int $param_5) {
+        $callback = function(string $param_0, $param_1, Request $param_2, array $param_3, int $param_5) {
             return 1;
         };
 
@@ -78,7 +76,6 @@ class ServiceFunctionReflectorTest extends TestCase
             [ 'name' => 'param_1', 'type' => 'string' ],
             [ 'name' => 'param_2', 'type' => Request::class ],
             [ 'name' => 'param_3', 'type' => 'array' ],
-            [ 'name' => 'param_4', 'type' => 'bool' ],
             [ 'name' => 'param_5', 'type' => 'int' ]
 
             ], $result);
@@ -115,8 +112,66 @@ class ServiceFunctionReflectorTest extends TestCase
             $this->assertEquals('float', $parameter_exception->getPrevious()->getData()['type']);
 
         }
+    }
 
+    public function getParameterValueFromRequestProvider()
+    {
+        return [
+            ["value_a", "value_a", "string"],
+            ["10", "10", "string"],
+            [10, "10", "int"],
+            [11, 11, "int"],
+            [10, "10", "int"]
+        ];
+    }
 
+    /**
+     * @dataProvider getParameterValueFromRequestProvider
+     * @param $expected
+     * @param $value
+     * @param string $type
+     * @throws ExceptionWithData
+     */
+    public function testGetParameterValueFromRequest($expected, $value, string $type) {
+        $stub = $this->getMockBuilder(Request::class)
+            ->onlyMethods(['getParameterList'])
+            ->getMock();
 
+        $stub->expects($this->any())
+            ->method('getParameterList')
+            ->willReturn(['value' => $value]);
+
+        $this->assertEquals($expected, ServiceFunctionReflector::getParameterValueFromRequest($stub, 'value', $type));
+
+    }
+
+    public function getParameterValueListFromRequestProvider()
+    {
+        return [
+            ["value_a", "value_a", "string"],
+            ["10", "10", "string"],
+            [10, "10", "int"],
+            [11, 11, "int"],
+            [10, "10", "int"]
+        ];
+    }
+
+    /**
+     * @dataProvider getParameterValueListFromRequestProvider
+     * @param $expected
+     * @param $value
+     * @param string $type
+     * @throws ExceptionWithData
+     */
+    public function testGetParameterValueListFromRequest($expected, $value, string $type) {
+        $stub = $this->getMockBuilder(Request::class)
+            ->onlyMethods(['getParameterList'])
+            ->getMock();
+
+        $stub->expects($this->any())
+            ->method('getParameterList')
+            ->willReturn(['value' => $value]);
+
+        $this->assertEquals([$expected], ServiceFunctionReflector::getParameterValueListFromRequest($stub, [['name' => 'value', 'type' => $type]]));
     }
 }

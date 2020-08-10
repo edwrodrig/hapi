@@ -90,7 +90,6 @@ class ServiceFunctionReflector
     public static function getParameterType(ReflectionType $type) : string {
         if ( $type instanceof ReflectionNamedType ) {
                  if ( $type->getName() === 'string') return 'string';
-            else if ( $type->getName() === 'bool' ) return 'bool';
             else if ( $type->getName() === 'array') return 'array';
             else if ( $type->getName() === 'int' ) return 'int';
             else if ( $type->getName() === InputFile::class ) return InputFile::class;
@@ -104,17 +103,64 @@ class ServiceFunctionReflector
         }
     }
 
-    public static function getParameterForRequest(Request $request, string $name, string $type) {
+    /**
+     * Obtiene un valor los valores de un parametro desde el request.
+     * En concreto busca un valor de parametro con un nombre y lo trata de convertir a un tipo especifico.
+     * Lanza excepciones si no se encuentra el parametro o si no corresponde al tipo especificado
+     * @param Request $request
+     * @param string $name
+     * @param string $type
+     * @return array|int|InputFile|InputFileList|Request|string
+     * @throws ExceptionWithData
+     */
+    public static function getParameterValueFromRequest(Request $request, string $name, string $type) {
         if ( $type === 'array') {
-            if ( isset($request->getParameterList()['name'] ))
-                $request->getParameter($name);
-            else {
-
-            }
+            return $request->getArrayParameter($name);
+        } else if ( $type === 'int' ) {
+            return $request->getIntParameter($name);
+        } else if ( $type === 'string' ) {
+            return $request->getStringParameter($name);
+        } else if ( $type == InputFile::class ) {
+            return $request->getFileParameter($name);
+        } else if ( $type == InputFileList::class ) {
+            return $request->getFileListParameter($name);
         } else if ( $type === Request::class ) {
-            return $request;
+           return $request;
         } else {
-            $request->getParameter($name);
+            throw new ExceptionWithData('unsupported type in request', [
+                'name' => $name,
+                'type' => $type,
+            ]);
         }
+    }
+
+    /**
+     * Devuelve un arreglo con todos los parámetros  que se quieren recuperar.
+     *
+     * @param Request $request
+     * @param array $parameter_info_list Debe cumplir con el formato establecido en {@see getParameterInfoList()}, es decir, se puede usar la salida directa de ese método o un array compatible con la salida.
+     * @return array
+     * @throws ExceptionWithData
+     */
+    public static function getParameterValueListFromRequest(Request $request, array $parameter_info_list) : array {
+        $parameter_list = [];
+        $exception_list = [];
+        foreach ( $parameter_info_list as $parameter_info ) {
+            try {
+                $parameter_list[] = self::getParameterValueFromRequest($request, $parameter_info['name'], $parameter_info['type']);
+            } catch ( Throwable $exception ) {
+                $exception_list[] = $exception;
+            }
+        }
+
+        if ( !empty($exception_list) ) {
+            throw new ExceptionWithData('error obtaining parameter value list',
+                [
+                    'parameter_info_list' => $parameter_info_list,
+                    'exception_list' => $exception_list
+                ]);
+        }
+        return $parameter_list;
+
     }
 }
