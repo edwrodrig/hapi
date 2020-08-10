@@ -101,4 +101,18 @@ class ServiceFunctionReflector
             return 'string';
         }
     }
+
+    public static function getParameterForRequest(Request $request, string $name, string $type) {
+        if ( $type === 'array') {
+            if ( isset($request->getParameterList()['name'] ))
+                $request->getParameter($name);
+            else {
+
+            }
+        } else if ( $type === Request::class ) {
+            return $request;
+        } else {
+            $request->getParameter($name);
+        }
+    }
 }

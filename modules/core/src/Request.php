@@ -28,17 +28,26 @@ class Request
          return  $_SERVER[$name];
     }
 
+    public function hasParameter(string $parameter_name) : bool {
+        $parameter_list = $this->getParameterList();
+        return isset($parameter_list[$parameter_name]);
+    }
+
+    public function hasFileParameter(string $parameter_name) : bool {
+        $parameter_list = $this->getFileParameterList();
+        return isset($parameter_list[$parameter_name]);
+    }
 
     /**
      * Obtiene un parámetros desde un nombre.
      * Este debe estar en la variable GET o POST ya que busca en en el resultado de {@see $parameter_list} que es poblado en el constructor
      * @param string $parameter_name
-     * @return string
+     * @return mixed
      * @throws ExceptionWithData
      */
-    public function getParameter(string $parameter_name) : string {
+    public function getParameter(string $parameter_name) {
         $parameter_list = $this->getParameterList();
-        if ( !isset($parameter_list[$parameter_name]) )
+        if ( !$this->hasParameter($parameter_name) )
             throw new ExceptionWithData('request does not have parameter', [ 'parameter_name' => $parameter_name, 'available_parameter_list' => $parameter_list ]);
         else
             return $parameter_list[$parameter_name];
@@ -51,6 +60,7 @@ class Request
      *  Este metodo es lazy. Solo necesita cargarse una vez.
      * @codeCoverageIgnore
      * @return array
+     * @throws ExceptionWithData
      */
     public function getParameterList() : array {
         if ( !isset($this->parameter_list) ) {
@@ -103,7 +113,62 @@ class Request
     protected function getFileParameterList() : array {
         return $_FILES;
     }
+/*
+    public function getBoolParameter(string $name) : bool {
+        $value = $this->getParameter($name);
 
+    }
+
+    public function getIntParameter(string $name) : int {
+        $value = $this->getParameter($name);
+        $int_value = intval($value);
+        if ( $int_value === )
+            throw new ExceptionWithData('parameter is not a string', [
+                'name' => $name,
+                'type' => gettype($value),
+                'value' => $value
+            ]);
+        } else if ( is_numeric())
+        } else {
+            return strval($value);
+        }
+    }
+    */
+
+    public function getStringParameter(string $name) : string {
+        $value = $this->getParameter($name);
+        if ( is_array($value) ) {
+            throw new ExceptionWithData('parameter is not a string', [
+                'name' => $name,
+                'type' => gettype($value),
+                'value' => $value
+            ]);
+        } else if ( is_object($value) ) {
+            throw new ExceptionWithData('parameter is not a string', [
+                'name' => $name,
+                'type' => gettype($value),
+                'value' => print_r($value, true)
+            ]);
+        } else if ( is_bool($value)) {
+            throw new ExceptionWithData('parameter is not a string', [
+                'name' => $name,
+                'type' => gettype($value),
+                'value' => $value
+            ]);
+        } else {
+            return strval($value);
+        }
+    }
+/*
+    public function getArrayParameter(string $name) : array {
+        if ( $this->hasParameter($name) ) {
+            $value = $this->getParameter($name);
+
+        } else if ( $this->hasFileParameter($name))
+            $this->getFil
+        }
+    }
+*/
     /**
      * Obtiene un parametro que viene de un input file. El input file tiene que ser un archivo solo.
      * Este archivo devuelve un arreglo con los datos que vienen de $FILE que.
@@ -119,7 +184,7 @@ class Request
      */
     public function getFileParameter(string $name) : array {
         $files = $this->getFileParameterList();
-        if ( !isset($files[$name]))
+        if ( !$this->hasFileParameter($name) )
             throw new ExceptionWithData('file input not found in post params', [ 'name' => $name, 'files' => $files ]);
 
         $file_input = $files[$name];
@@ -150,7 +215,7 @@ class Request
      */
     public function getFileListParameter(string $name) : array {
         $files = $this->getFileParameterList();
-        if ( !isset($files[$name]))
+        if ( !$this->hasFileParameter($name) )
             throw new ExceptionWithData('file input not found in post params', [ 'name' => $name, 'files' => $files ]);
 
         $file_list_input = $files[$name];
