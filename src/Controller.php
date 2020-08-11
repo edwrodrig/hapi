@@ -1,17 +1,15 @@
 <?php
 declare(strict_types=1);
 
-
 namespace labo86\hapi;
 
+use labo86\exception_with_data\ExceptionForFrontEnd;
 use labo86\exception_with_data\ExceptionWithData;
 use labo86\hapi_core\Request;
-use labo86\hapi_core\Response;
 use labo86\hapi_core\ResponseJson;
 use labo86\hapi_core\ServiceMap;
 use ReflectionException;
 use ReflectionFunction;
-use ReflectionType;
 use Throwable;
 
 class Controller
@@ -52,29 +50,36 @@ class Controller
 
             $response = $this->service_map->getService($method)($request);
             $response->send();
-        }
-        catch ( Throwable $throwable ) {
 
-            $log_data = ServiceException::getDataForDeveloper($throwable);
-            $log_data['i'] = uniqid();
-            file_put_contents($this->error_log_filename, json_encode($log_data, JSON_UNESCAPED_UNICODE) . "\n", FILE_APPEND);
+        } catch ( Throwable $throwable ) {
+
+            $exception = ExceptionForFrontEnd::normalize($throwable);
+
+            file_put_contents($this->error_log_filename, json_encode($exception->toArray(), JSON_UNESCAPED_UNICODE) . "\n", FILE_APPEND);
             http_response_code(400);
 
-            $user_data = ServiceException::getDataForUser($throwable);
-            $user_data['i'] = $log_data['i'];
-            $response = new ResponseJson($user_data);
+            $response = new ResponseJson($exception->getDataForUser());
             $response->send();
-
 
         }
     }
 
+    /**
+     * @param string $function_name
+     * @throws ExceptionWithData
+     * @throws ReflectionException
+     */
     public function registerFunction(string $function_name)
     {
         $reflection_function = new ReflectionFunction($function_name);
         $this->getServiceMap()->registerService($function_name, ServiceFunctionReflector::createServiceCallback($reflection_function));
     }
 
+    /**
+     * @param string $filename
+     * @throws ReflectionException
+     * @throws ExceptionWithData
+     */
     public function registerFunctionsInFile(string $filename) {
         /** @noinspection PhpIncludeInspection */
         include_once($filename);

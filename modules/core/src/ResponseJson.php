@@ -22,6 +22,6 @@ class ResponseJson extends Response
     }
 
     public function getData() {
-        return $data;
+        return $this->data;
     }
 }
