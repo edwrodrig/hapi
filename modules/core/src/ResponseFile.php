@@ -32,4 +32,8 @@ class ResponseFile extends Response
         header('Content-Length: ' . filesize($this->filename));
         readfile($this->filename);
     }
+
+    public function getFilename() : string {
+        return $this->filename;
+    }
 }

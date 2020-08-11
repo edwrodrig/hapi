@@ -13,7 +13,7 @@
   "minimum-stability": "stable",
   "require": {
     "php": "^7.4",
-    "labo86/exception_with_data" : "^1.0",
+    "labo86/exception_with_data" : "^2.0",
     "ext-json": "*"
   },
   "require-dev": {

@@ -25,7 +25,7 @@ class BuiltInServerTest extends TestCase
 
         $response = $server->makeRequest('get_method.php');
 
-        $this->assertJsonStringToArray(['message' => 'request does not have parameter', 'data' => ['parameter_name' => 'method', 'available_parameter_list' => []]], $response);
+        $this->assertJsonStringToArray(['m' => 'request does not have parameter', 'd' => ['parameter_name' => 'method', 'available_parameter_list' => []]], $response);
 
         $this->assertStringContainsString('[200]: GET /get_method.php', $server->getStdErr());
     }

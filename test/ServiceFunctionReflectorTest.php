@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace test\labo86\hapi;
 
 use labo86\exception_with_data\ExceptionWithData;
+use labo86\exception_with_data\Util;
 use labo86\hapi\ServiceFunctionReflector;
 use labo86\hapi_core\Request;
 use labo86\hapi_core\ResponseJson;
@@ -99,18 +100,22 @@ class ServiceFunctionReflectorTest extends TestCase
             $result = ServiceFunctionReflector::getParameterInfoList($reflection_function);
             $this->fail('debería fallar porque float no es valido');
         } catch ( ExceptionWithData $exception ) {
-            $this->assertEquals("some services parameter types are not supported", $exception->getMessage());
-            $data = $exception->getData();
 
-            $this->assertEquals($data['filename'], __FILE__);
-            $this->assertEquals($data['function'], 'test\labo86\hapi\{closure}');
-            $this->assertEquals($data['line'], $line);
-            $this->assertCount(1, $data['exception_list']);
-            /** @var $parameter_exception ExceptionWithData */
-            $parameter_exception = $data['exception_list'][0];
-            $this->assertEquals('service parameter type is not supported', $parameter_exception->getMessage());
-            $this->assertEquals('param_1', $parameter_exception->getData()['name']);
-            $this->assertEquals('float', $parameter_exception->getPrevious()->getData()['type']);
+            $data = $exception->toArray(false);
+
+            $this->assertCount(2, $data['d']['element_list']);
+            unset($data['d']['element_list']);
+
+            $this->assertEquals([
+                'm' => "some services parameter types are not supported",
+                'd' => [
+                    'filename' => __FILE__,
+                    'function' => 'test\labo86\hapi\{closure}',
+                    'line' => $line
+                    ],
+                'p' => [ 'm' => 'service parameter type is not supported', 'd' => ['name' => 'param_1', 'type' => 'float'], 'p' => [ 'm' => 'service parameter type is not supported', 'd' => ['type' => 'float']]],
+                'pl' => [[ 'm' => 'service parameter type is not supported', 'd' => ['name' => 'param_1', 'type' => 'float'], 'p' => [ 'm' => 'service parameter type is not supported', 'd' => ['type' => 'float']]]]
+            ],$data);
 
         }
     }

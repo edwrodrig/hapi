@@ -30,9 +30,9 @@ class RequestTest extends TestCase
     public function getMethodProvider()
     {
         return [
-            [[], '{"message":"request does not have parameter","data":{"parameter_name":"method","available_parameter_list":[]}}', ""],
+            [[], '{"m":"request does not have parameter","d":{"parameter_name":"method","available_parameter_list":[]}}', ""],
             [["method" => "action"], "action", "?method=action"],
-            [["param" => "action"], '{"message":"request does not have parameter","data":{"parameter_name":"method","available_parameter_list":{"param":"action"}}}', "?param=action"],
+            [["param" => "action"], '{"m":"request does not have parameter","d":{"parameter_name":"method","available_parameter_list":{"param":"action"}}}', "?param=action"],
             [["method" => "action", "param" => "content"], "action", "?method=action&param=content"]
         ];
     }
@@ -106,7 +106,7 @@ class RequestTest extends TestCase
 
         $response = self::$server->makeRequest('get_method.php', $context);
 
-        $this->assertJsonStringToArray(['message' => 'json in post is not an array', 'data' => ['contents' => '"hola"']], $response);
+        $this->assertJsonStringToArray(['m' => 'json in post is not an array', 'd' => ['contents' => '"hola"']], $response);
 
     }
 
@@ -125,8 +125,8 @@ class RequestTest extends TestCase
         $response = self::$server->makeRequest('get_method.php', $context);
 
         $json_response = json_decode($response, true);
-        $this->assertEquals(['contents' => '{id}'], $json_response['data']);
-        $this->assertJsonStringToArray(['message' => 'post content is not a valid json', 'data' => ['contents' => '{id}']], $response);
+        $this->assertEquals(['contents' => '{id}'], $json_response['d']);
+        $this->assertJsonStringToArray(['m' => 'post content is not a valid json', 'd' => ['contents' => '{id}']], $response);
 
     }
 
@@ -251,8 +251,8 @@ EOF
         $file_data = $json_data['file'];
         $this->assertArrayNotHasKey('tmp_name', $file_data);
         $this->assertEquals([
-            'message' => 'request does not have parameter',
-            'data' => [
+            'm' => 'request does not have parameter',
+            'd' => [
                 'parameter_name' => 'file',
                 'available_parameter_list' => []
             ]]

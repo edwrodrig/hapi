@@ -20,4 +20,8 @@ class ResponseJson extends Response
         header('Content-Type: application/json;charset=utf-8');
         echo $json_response;
     }
+
+    public function getData() {
+        return $data;
+    }
 }

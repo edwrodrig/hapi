@@ -6,10 +6,11 @@ namespace labo86\hapi;
 
 use Closure;
 use labo86\exception_with_data\ExceptionWithData;
+use labo86\exception_with_data\ThrowableList;
+use labo86\exception_with_data\Util;
 use labo86\hapi_core\Request;
 use labo86\hapi_core\Response;
 use labo86\hapi_core\ResponseJson;
-use ReflectionFunction;
 use ReflectionFunctionAbstract;
 use ReflectionNamedType;
 use ReflectionParameter;
@@ -25,40 +26,40 @@ class ServiceFunctionReflector
      * @throws ExceptionWithData
      */
     public static function getParameterInfoList(ReflectionFunctionAbstract $reflection_function) : array {
+
         $reflection_parameter_list = $reflection_function->getParameters();
 
-        $parameter_info_list = [];
-        $exception_list = [];
-        foreach ( $reflection_parameter_list as $reflection_parameter ) {
-            try {
-                $parameter_info_list[] = self::getParameterInfo($reflection_parameter);
-            } catch ( Throwable $exception ) {
-                $exception_list[] = $exception;
-            }
-        }
+        try {
+            return Util::foreachTry(function (ReflectionParameter $reflection_parameter) {
+                return self::getParameterInfo($reflection_parameter);
+            }, $reflection_parameter_list);
 
-        if ( !empty($exception_list) ) {
-            throw new ExceptionWithData('some services parameter types are not supported',
+        } catch ( ThrowableList $exception ) {
+            throw Util::rethrow('some services parameter types are not supported',
             [
                'function' => $reflection_function->getName(),
                'filename' => $reflection_function->getFileName(),
-               'line' => $reflection_function->getStartLine(),
-               'exception_list' => $exception_list
-            ]);
+               'line' => $reflection_function->getStartLine()
+            ], $exception);
         }
-        return $parameter_info_list;
     }
 
 
+    /**
+     * @param ReflectionParameter $parameter
+     * @return array
+     * @throws ExceptionWithData
+     */
     public static function getParameterInfo(ReflectionParameter $parameter) : array {
 
         $name = $parameter->getName();
 
         $reflection_type = $parameter->getType();
+
         try {
             $type = is_null($reflection_type) ? 'string' : self::getParameterType($reflection_type);
         } catch ( ExceptionWithData $exception ) {
-            throw new ExceptionWithData($exception->getMessage(), [
+            throw Util::rethrow("", [
                 'name' => $name
             ], $exception);
         }
@@ -132,24 +133,18 @@ class ServiceFunctionReflector
      * @throws ExceptionWithData
      */
     public static function getParameterValueListFromRequest(Request $request, array $parameter_info_list) : array {
-        $parameter_list = [];
-        $exception_list = [];
-        foreach ( $parameter_info_list as $parameter_info ) {
-            try {
-                $parameter_list[] = self::getParameterValueFromRequest($request, $parameter_info['name'], $parameter_info['type']);
-            } catch ( Throwable $exception ) {
-                $exception_list[] = $exception;
-            }
-        }
+        try {
+            return Util::foreachTry(function (array $parameter_info) use ($request) {
+                return self::getParameterValueFromRequest($request, $parameter_info['name'], $parameter_info['type']);
+            }, $parameter_info_list);
 
-        if ( !empty($exception_list) ) {
-            throw new ExceptionWithData('error obtaining parameter value list',
+        } catch ( ThrowableList $exception ) {
+            throw Util::rethrow('error obtaining parameter value list',
                 [
                     'parameter_info_list' => $parameter_info_list,
-                    'exception_list' => $exception_list
-                ]);
+                ], $exception);
         }
-        return $parameter_list;
+
 
     }
 

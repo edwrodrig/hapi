@@ -14,7 +14,6 @@ $server_info = new Request();
 
 try {
     echo $server_info->getParameter('method');
-} catch ( ExceptionWithData $exception ) {
-    echo json_encode(['message' => $exception->getMessage(),
-    'data' => $exception->getData()]);
+} catch ( Throwable $exception ) {
+    echo json_encode(\labo86\exception_with_data\Util::toArray($exception, false));
 }
