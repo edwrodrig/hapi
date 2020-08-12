@@ -15,12 +15,19 @@ use ReflectionFunctionAbstract;
 use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionType;
-use Throwable;
 
 class ServiceFunctionReflector
 {
 
     /**
+     * Obtiene la información de los parámetros de una función.
+     * Son un arreglo de arreglos con la siguiente forma:
+     * <code>
+     * [
+     *  ['name' => 'param_1' , 'type' => 'int'],
+     *  ['name' => 'param_2' , 'type' => 'string']
+     * ]
+     * </code>
      * @param ReflectionFunctionAbstract $reflection_function
      * @return array
      * @throws ExceptionWithData
@@ -46,6 +53,11 @@ class ServiceFunctionReflector
 
 
     /**
+     * Obtiene la información de los parámetros de una función.
+     * Es un arreglo de la siguiente forma:
+     * <code>
+     *  ['name' => 'param_1' , 'type' => 'int'],
+     * </code>
      * @param ReflectionParameter $parameter
      * @return array
      * @throws ExceptionWithData
