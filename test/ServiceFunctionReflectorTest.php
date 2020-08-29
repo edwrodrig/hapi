@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace test\labo86\hapi;
 
 use labo86\exception_with_data\ExceptionWithData;
-use labo86\exception_with_data\Util;
 use labo86\hapi\ServiceFunctionReflector;
 use labo86\hapi_core\Request;
 use labo86\hapi_core\ResponseJson;
