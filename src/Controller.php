@@ -63,33 +63,4 @@ class Controller
 
         }
     }
-
-    /**
-     * @param string $function_name
-     * @throws ExceptionWithData
-     * @throws ReflectionException
-     */
-    public function registerFunction(string $function_name)
-    {
-        $reflection_function = new ReflectionFunction($function_name);
-        $this->getServiceMap()->registerService($function_name, ServiceFunctionReflector::createServiceCallback($reflection_function));
-    }
-
-    /**
-     * @param string $filename
-     * @throws ReflectionException
-     * @throws ExceptionWithData
-     */
-    public function registerFunctionsInFile(string $filename) {
-        /** @noinspection PhpIncludeInspection */
-        include_once($filename);
-
-        $function_name_list = get_defined_functions()['user'];
-        foreach ( $function_name_list as $function_name ) {
-            $reflection_function = new ReflectionFunction($function_name);
-            if ( $reflection_function->getFileName() === $filename )
-                $this->registerFunction($function_name);
-        }
-    }
-
 }
