@@ -5,9 +5,9 @@ namespace labo86\hapi;
 
 use labo86\exception_with_data\ExceptionForFrontEnd;
 use labo86\exception_with_data\ExceptionWithData;
-use labo86\hapi_core\Request;
-use labo86\hapi_core\ResponseJson;
-use labo86\hapi_core\ServiceMap;
+use labo86\hapi\Request;
+use labo86\hapi\ResponseJson;
+use labo86\hapi\ServiceMap;
 use ReflectionException;
 use ReflectionFunction;
 use Throwable;

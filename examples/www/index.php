@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-use labo86\hapi_core\Request;
-use labo86\hapi_core\Response;
-use labo86\hapi_core\ResponseJson;
-use labo86\hapi_core\ServiceMap;
+use labo86\hapi\Request;
+use labo86\hapi\Response;
+use labo86\hapi\ResponseJson;
+use labo86\hapi\ServiceMap;
 
 include_once(__DIR__ . '/../../vendor/autoload.php');
 

@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace test\labo86\hapi_core;
+namespace test\labo86\hapi;
 
 use labo86\exception_with_data\ExceptionWithData;
-use labo86\hapi_core\ServiceMap;
+use labo86\hapi\ServiceMap;
 use PHPUnit\Framework\TestCase;
 
 class ServiceMapTest extends TestCase
@@ -19,7 +19,7 @@ class ServiceMapTest extends TestCase
             $this->fail("should throw");
 
         } catch (ExceptionWithData $exception) {
-            $this->assertEquals("service not registered", $exception->getMessage());
+            $this->assertEquals("SERVICE_NOT_REGISTERED", $exception->getMessage());
             $this->assertEquals(["method_name" => "something"], $exception->getData());
         }
 

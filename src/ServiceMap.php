@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace labo86\hapi_core;
+namespace labo86\hapi;
 
 use labo86\exception_with_data\ExceptionWithData;
 
 /**
  * Class ServiceMap
- * @package labo86\hapi_core
+ * @package labo86\hapi
  */
 class ServiceMap
 {
@@ -64,7 +64,7 @@ class ServiceMap
         if ( isset($this->service_map[$method_name]) ) {
             return $this->service_map[$method_name];
         } else {
-            throw new ExceptionWithData("service not registered", ["method_name" => $method_name]);
+            throw new ExceptionWithData("SERVICE_NOT_REGISTERED", ["method_name" => $method_name]);
         }
     }
 }

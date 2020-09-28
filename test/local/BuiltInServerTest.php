@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace test\labo86\hapi_core\local;
+namespace test\labo86\hapi\local;
 
 use labo86\exception_with_data\ExceptionWithData;
-use labo86\hapi_core\BuiltInServer;
+use labo86\hapi\BuiltInServer;
 use PHPUnit\Framework\TestCase;
 
 class BuiltInServerTest extends TestCase

@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace test\labo86\hapi_core;
+namespace test\labo86\hapi;
 
 use labo86\exception_with_data\ExceptionWithData;
 use labo86\hapi\InputFile;
 use labo86\hapi\InputFileList;
-use labo86\hapi_core\Request;
+use labo86\hapi\Request;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 

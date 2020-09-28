@@ -22,20 +22,19 @@
   },
   "autoload": {
     "psr-4": {
-      "labo86\\hapi\\": "src/",
-      "labo86\\hapi_core\\": "modules/core/src/"
+      "labo86\\hapi\\": "src/"
     },
-    "exclude-from-classmap": ["modules/core/src/BuiltInServer.php"]
+    "exclude-from-classmap": [
+      "src/BuiltInServer.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
       "test\\labo86\\hapi\\": "test/",
-      "test\\labo86\\hapi\\local\\": "test/local/",
-      "test\\labo86\\hapi_core\\": "modules/core/test/",
-      "test\\labo86\\hapi_core\\local\\": "modules/core/test/local/"
+      "test\\labo86\\hapi\\local\\": "test/local/"
     },
     "files" : [
-      "modules/core/src/BuiltInServer.php"
+      "src/BuiltInServer.php"
     ]
   },
   "archive": {
@@ -45,7 +44,6 @@
       "/examples",
       "/scripts",
       "/test",
-      "/modules/core/test",
       "/.gitignore",
       "/.phpunit.result.cache",
       "/phpunit.xml.dist",

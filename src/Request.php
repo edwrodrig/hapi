@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace labo86\hapi_core;
+namespace labo86\hapi;
 
 use labo86\exception_with_data\ExceptionWithData;
 use labo86\hapi\InputFile;
@@ -15,7 +15,7 @@ use labo86\hapi\InputFileList;
  * Los parametros que vienen por $FILE se recuperan con los métodos {@see getFileParameter()} si es un file input que selecciona un archivo
  * o {@see getFileListParameter()}  si el file input soporta multiples archivos.
  *
- * @package labo86\hapi_core
+ * @package labo86\hapi
  */
 class Request
 {

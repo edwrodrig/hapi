@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace test\labo86\hapi_core;
+namespace test\labo86\hapi;
 
-use labo86\hapi_core\ResponseJson;
+use labo86\hapi\ResponseJson;
 use PHPUnit\Framework\TestCase;
 
 class ResponseJsonTest extends TestCase
