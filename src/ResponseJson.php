@@ -13,7 +13,7 @@ class ResponseJson extends Response
 
     public function __construct($data) {
         $this->data = $data;
-        $this->mime_type = 'Content-Type: application/json;charset=utf-8';
+        $this->mime_type = 'application/json;charset=utf-8';
     }
 
     public function send() {
