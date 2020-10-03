@@ -50,7 +50,6 @@ class Controller
             $exception = ExceptionForFrontEnd::normalize($throwable);
 
             file_put_contents($this->error_log_filename, json_encode($exception->toArray(), JSON_UNESCAPED_UNICODE) . "\n", FILE_APPEND);
-            http_response_code(400);
 
             return new ResponseJson($exception->getDataForUser());
         }

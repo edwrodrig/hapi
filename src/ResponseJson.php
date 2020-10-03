@@ -17,8 +17,10 @@ class ResponseJson extends Response
     }
 
     public function send() {
+        http_response_code($this->http_response_code);
         $json_response = json_encode($this->data, JSON_PRETTY_PRINT);
         header($this->getHeaderContentType());
+        $this->sendHeaderList();
         echo $json_response;
     }
 

@@ -30,7 +30,16 @@ try {
                 'message' => 'successful',
                 'request_params' => $request->getParameterList()
             ]);
+        })
+        ->registerService('date', function(Request $request) : Response {
+            $response = new ResponseJson([
+                'message' => date('H:i:s'),
+                'request_params' => $request->getParameterList()
+            ]);
+            $response->addHeader('Cache-Control: max-age=10');
+            return $response;
         });
+
 
 
     /** Se obtiene el servicio desde el service map */
