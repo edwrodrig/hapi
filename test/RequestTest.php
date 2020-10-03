@@ -16,34 +16,23 @@ class RequestTest extends TestCase
     public function testGetParameterBasic()
     {
 
-        $stub = $this->getMockBuilder(Request::class)
-            ->onlyMethods(['getParameterList'])
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $stub->expects($this->any())
-            ->method('getParameterList')
-            ->willReturn(['method' => 'something']);
+        $request = new Request();
+        $request->setParameterList(['method' => 'something']);
 
         /** @var Request $stub */
-        $this->assertEquals('something', $stub->getParameter('method'));
+        $this->assertEquals('something', $request->getParameter('method'));
 
     }
 
     public function testGetParameterNotParameter()
     {
         try {
-            $stub = $this->getMockBuilder(Request::class)
-                ->onlyMethods(['getParameterList'])
-                ->disableOriginalConstructor()
-                ->getMock();
+            $request = new Request();
+            $request->setParameterList(['a' => '1']);
 
-            $stub->expects($this->any())
-                ->method('getParameterList')
-                ->willReturn(['a' => '1']);
 
             /** @var Request $stub */
-            $stub->getParameter('method');
+            $request->getParameter('method');
 
 
                 $this->fail("should throw");
@@ -69,6 +58,7 @@ class RequestTest extends TestCase
      */
 
     public function testGetContentType(string $expected, string $actual) {
+        $request = new Request();
         $stub = $this->getMockBuilder(Request::class)
             ->onlyMethods(['getServerVariable'])
             ->disableOriginalConstructor()
@@ -81,7 +71,6 @@ class RequestTest extends TestCase
 
         /** @var Request $stub */
         $this->assertEquals($expected, $stub->getContentType());
-
     }
 
     public function getStringParameterProvider()
@@ -101,16 +90,11 @@ class RequestTest extends TestCase
      */
     public function testGetStringParameter(string $expected, $actual)
     {
-        $stub = $this->getMockBuilder(Request::class)
-            ->onlyMethods(['getParameterList'])
-            ->getMock();
-
-        $stub->expects($this->any())
-            ->method('getParameterList')
-            ->willReturn(['method' => $actual]);
+        $request = new Request();
+        $request->setParameterList(['method' => $actual]);
 
         /** @var Request $stub */
-        $this->assertEquals($expected, $stub->getStringParameter('method'));
+        $this->assertEquals($expected, $request->getStringParameter('method'));
     }
 
     public function getIntParameterProvider()
@@ -131,16 +115,11 @@ class RequestTest extends TestCase
      */
     public function testGetIntParameter(int $expected, $actual)
     {
-        $stub = $this->getMockBuilder(Request::class)
-            ->onlyMethods(['getParameterList'])
-            ->getMock();
-
-        $stub->expects($this->any())
-            ->method('getParameterList')
-            ->willReturn(['method' => $actual]);
+        $request = new Request();
+        $request->setParameterList(['method' => $actual]);
 
         /** @var Request $stub */
-        $this->assertEquals($expected, $stub->getIntParameter('method'));
+        $this->assertEquals($expected, $request->getIntParameter('method'));
     }
 
     public function getArrayParameterProvider()
@@ -160,16 +139,11 @@ class RequestTest extends TestCase
      */
     public function testGetArrayParameter(array $expected, array $actual)
     {
-        $stub = $this->getMockBuilder(Request::class)
-            ->onlyMethods(['getParameterList'])
-            ->getMock();
-
-        $stub->expects($this->any())
-            ->method('getParameterList')
-            ->willReturn(['method' => $actual]);
+        $request = new Request();
+        $request->setParameterList(['method' => $actual]);
 
         /** @var Request $stub */
-        $this->assertEquals($expected, $stub->getArrayParameter('method'));
+        $this->assertEquals($expected, $request->getArrayParameter('method'));
     }
 
     public function getFileParameterProvider() {
@@ -186,16 +160,11 @@ class RequestTest extends TestCase
      */
     public function testGetFileParameter(array $actual)
     {
-        $stub = $this->getMockBuilder(Request::class)
-            ->onlyMethods(['getFileParameterList'])
-            ->getMock();
-
-        $stub->expects($this->any())
-            ->method('getFileParameterList')
-            ->willReturn(['method' => $actual]);
+        $request = new Request();
+        $request->setFileParameterList(['method' => $actual]);
 
         /** @var Request $stub */
-        $input_file = $stub->getFileParameter('method');
+        $input_file = $request->getFileParameter('method');
         $this->assertInstanceOf(InputFile::class, $input_file);
         $this->assertEquals($actual, $input_file->getData());
     }
@@ -220,16 +189,11 @@ class RequestTest extends TestCase
      */
     public function testGetFileListParameter(array $actual)
     {
-        $stub = $this->getMockBuilder(Request::class)
-            ->onlyMethods(['getFileParameterList'])
-            ->getMock();
-
-        $stub->expects($this->any())
-            ->method('getFileParameterList')
-            ->willReturn(['method' => $actual]);
+        $request = new Request();
+        $request->setFileParameterList(['method' => $actual]);
 
         /** @var Request $stub */
-        $input_file = $stub->getFileListParameter('method');
+        $input_file = $request->getFileListParameter('method');
         $this->assertInstanceOf(InputFileList::class, $input_file);
         $this->assertEquals($actual, $input_file->getData());
         $this->assertEquals($actual['name'][0],$input_file[0]->getData()['name']);
@@ -253,16 +217,11 @@ class RequestTest extends TestCase
      */
     public function testGetStringParameterError($expected, $actual)
     {
-        $stub = $this->getMockBuilder(Request::class)
-            ->onlyMethods(['getParameterList'])
-            ->getMock();
-
-        $stub->expects($this->any())
-            ->method('getParameterList')
-            ->willReturn(['method' => $actual]);
+        $request = new Request();
+        $request->setParameterList(['method' => $actual]);
 
         try {
-            $stub->getStringParameter('method');
+            $request->getStringParameter('method');
             $this->fail("should throw");
 
         } catch (ExceptionWithData $exception) {
@@ -292,16 +251,11 @@ class RequestTest extends TestCase
      */
     public function testGetIntParameterError($expected, $actual)
     {
-        $stub = $this->getMockBuilder(Request::class)
-            ->onlyMethods(['getParameterList'])
-            ->getMock();
-
-        $stub->expects($this->any())
-            ->method('getParameterList')
-            ->willReturn(['method' => $actual]);
+        $request = new Request();
+        $request->setParameterList(['method' => $actual]);
 
         try {
-            $stub->getIntParameter('method');
+            $request->getIntParameter('method');
             $this->fail("should throw");
 
         } catch (ExceptionWithData $exception) {
@@ -329,16 +283,11 @@ class RequestTest extends TestCase
      */
     public function testGetArrayParameterError($expected, $actual)
     {
-        $stub = $this->getMockBuilder(Request::class)
-            ->onlyMethods(['getParameterList'])
-            ->getMock();
-
-        $stub->expects($this->any())
-            ->method('getParameterList')
-            ->willReturn(['method' => $actual]);
+        $request = new Request();
+        $request->setParameterList(['method' => $actual]);
 
         try {
-            $stub->getArrayParameter('method');
+            $request->getArrayParameter('method');
             $this->fail("should throw");
 
         } catch (ExceptionWithData $exception) {
@@ -362,16 +311,12 @@ class RequestTest extends TestCase
      */
     public function testGetFileParameterError($expected, $actual)
     {
-        $stub = $this->getMockBuilder(Request::class)
-            ->onlyMethods(['getFileParameterList'])
-            ->getMock();
+        $request = new Request();
+        $request->setFileParameterList(['method' => $actual]);
 
-        $stub->expects($this->any())
-            ->method('getFileParameterList')
-            ->willReturn(['method' => $actual]);
 
         try {
-            $stub->getFileParameter('method');
+            $request->getFileParameter('method');
             $this->fail("should throw");
 
         } catch (ExceptionWithData $exception) {
@@ -395,16 +340,11 @@ class RequestTest extends TestCase
      */
     public function testGetFileListParameterError($expected, $actual)
     {
-        $stub = $this->getMockBuilder(Request::class)
-            ->onlyMethods(['getFileParameterList'])
-            ->getMock();
-
-        $stub->expects($this->any())
-            ->method('getFileParameterList')
-            ->willReturn(['method' => $actual]);
+        $request = new Request();
+        $request->setFileParameterList(['method' => $actual]);
 
         try {
-            $stub->getFileListParameter('method');
+            $request->getFileListParameter('method');
             $this->fail("should throw");
 
         } catch (ExceptionWithData $exception) {

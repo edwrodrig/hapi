@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace labo86\hapi;
 
 use labo86\exception_with_data\ExceptionWithData;
-use labo86\hapi\InputFile;
-use labo86\hapi\InputFileList;
 
 /**
  * Class Request.
@@ -20,6 +18,10 @@ use labo86\hapi\InputFileList;
 class Request
 {
      protected array $parameter_list;
+
+     protected string $content_type;
+
+     protected array $file_parameter_list;
 
     /**
      * @codeCoverageIgnore
@@ -75,10 +77,34 @@ class Request
         return $this->parameter_list;
     }
 
+    /**
+     * Setear los parametros.
+     * Cuando se setean son usados por {@see getParameterList()}. Esta funcion es util para testeo
+     * @param array $parameter_list
+     */
+    public function setParameterList(array $parameter_list) {
+        $this->parameter_list = $parameter_list;
+    }
+
     public function getContentType() : string {
-        $content_type = $this->getServerVariable("CONTENT_TYPE");
-        $elements = explode(";", $content_type, 2);
-        return trim($elements[0]);
+        if ( !isset($this->content_type) ) {
+            $content_type = $this->getServerVariable("CONTENT_TYPE");
+            $elements = explode(";", $content_type, 2);
+            $this->content_type = trim($elements[0]);
+        }
+        return $this->content_type;
+
+    }
+
+
+    /**
+     * Setear el content type
+     * Cuando se setean son usados por {@see getContentType()}. Esta funcion es util para testeo
+     * @param string $content_type
+     * @return string
+     */
+    public function setContentType(string $content_type) : string {
+        $this->content_type = $content_type;
     }
 
     /**
@@ -113,7 +139,46 @@ class Request
      * @codeCoverageIgnore
      */
     protected function getFileParameterList() : array {
-        return $_FILES;
+        if ( !isset($this->file_parameter_list) ) {
+            $this->file_parameter_list = $_FILES;
+        }
+
+        return $this->file_parameter_list;
+    }
+
+    /**
+     * Setear los parametros que son archivos
+     * Cuando se setean son usados por {@see getFileParameterList()}. Esta función es util para testeo
+     * El formato que tiene debe ser conforme a $_FILES {@see  https://www.php.net/manual/en/features.file-upload.post-method.php}
+     * Ejemplo:
+     * <code>
+     * [
+     *       'parameter_name' => [
+     *          'name' => 'facepalm.jpg'
+     *          'type' => 'image/jpeg',
+     *          'tmp_name' =>'/tmp/phpn3FmFr',
+     *          'error' => 0,
+     *          'size' => 15476
+     *      ]
+     * ]
+     * </code>
+     * Recordar que para file input multiples es de la siguiente forma:
+     * <code>
+     * [
+     *       'parameter_name' => [
+     *          'name' => ['facepalm.jpg']
+     *          'type' => ['image/jpeg'],
+     *          'tmp_name' =>['/tmp/phpn3FmFr'],
+     *          'error' => [0],
+     *          'size' => [15476]
+     *      ]
+     * ]
+     * </code>
+     * @param string $parameter_list
+     * @return string
+     */
+    public function setFileParameterList(array $parameter_list)  {
+        $this->file_parameter_list = $parameter_list;
     }
 
     public function getIntParameter(string $name) : int
