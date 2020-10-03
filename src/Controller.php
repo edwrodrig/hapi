@@ -4,12 +4,6 @@ declare(strict_types=1);
 namespace labo86\hapi;
 
 use labo86\exception_with_data\ExceptionForFrontEnd;
-use labo86\exception_with_data\ExceptionWithData;
-use labo86\hapi\Request;
-use labo86\hapi\ResponseJson;
-use labo86\hapi\ServiceMap;
-use ReflectionException;
-use ReflectionFunction;
 use Throwable;
 
 class Controller
@@ -43,13 +37,13 @@ class Controller
         return $_SERVER[$var_name] ?? $_ENV[$var_name] ?? null;
     }
 
-    public function run() {
+    
+    public function handleRequest(Request $request) : Response {
         try {
-            $request = $this->getRequest();
-            $method = $request->getParameter('method');
+            $method = $request->getStringParameter('method');
 
-            $response = $this->service_map->getService($method)($request);
-            $response->send();
+            return $this->service_map->getService($method)($request);
+
 
         } catch ( Throwable $throwable ) {
 
@@ -58,9 +52,15 @@ class Controller
             file_put_contents($this->error_log_filename, json_encode($exception->toArray(), JSON_UNESCAPED_UNICODE) . "\n", FILE_APPEND);
             http_response_code(400);
 
-            $response = new ResponseJson($exception->getDataForUser());
-            $response->send();
-
+            return new ResponseJson($exception->getDataForUser());
         }
+    }
+
+    /**
+     * Casi lo mismo que {@see callRequest()} pero aquí crea una nueva request
+     */
+    public function run() {
+        $request = $this->getRequest();
+        $this->handleRequest($request)->send();
     }
 }
