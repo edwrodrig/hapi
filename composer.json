@@ -18,14 +18,16 @@
   },
   "require-dev": {
     "phpunit/phpunit": "^8.5",
-    "mikey179/vfsstream": "^1.6"
+    "mikey179/vfsstream": "^1.6",
+    "ext-fileinfo": "*"
   },
   "autoload": {
     "psr-4": {
       "labo86\\hapi\\": "src/"
     },
     "exclude-from-classmap": [
-      "src/BuiltInServer.php"
+      "src/testing/BuiltInServer.php",
+      "src/testing/Util.php"
     ]
   },
   "autoload-dev": {
@@ -34,7 +36,8 @@
       "test\\labo86\\hapi\\local\\": "test/local/"
     },
     "files" : [
-      "src/BuiltInServer.php"
+      "src/testing/BuiltInServer.php",
+      "src/testing/Util.php"
     ]
   },
   "archive": {

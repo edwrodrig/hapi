@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace test\labo86\hapi\local;
 
 use labo86\exception_with_data\ExceptionWithData;
-use labo86\hapi\BuiltInServer;
+use labo86\hapi\testing\BuiltInServer;
 use PHPUnit\Framework\TestCase;
 
 class RequestTest extends TestCase

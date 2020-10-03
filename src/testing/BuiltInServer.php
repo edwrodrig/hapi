@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace labo86\hapi;
+namespace labo86\hapi\testing;
 
 use labo86\exception_with_data\ExceptionWithData;
 
