@@ -99,6 +99,7 @@ class ControllerTest extends TestCase
         $log = $this->assertLog();
 
         $this->assertEquals($response['i'], $log['i']);
+        $this->assertArrayHasKey('t', $log);
     }
 
 

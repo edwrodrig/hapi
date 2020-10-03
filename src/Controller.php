@@ -48,8 +48,9 @@ class Controller
         } catch ( Throwable $throwable ) {
 
             $exception = ExceptionForFrontEnd::normalize($throwable);
-
-            file_put_contents($this->error_log_filename, json_encode($exception->toArray(), JSON_UNESCAPED_UNICODE) . "\n", FILE_APPEND);
+            $data = $exception->toArray();
+            $data['t'] = date('Y-m-d H:i:s');
+            file_put_contents($this->error_log_filename, json_encode($data, JSON_UNESCAPED_UNICODE) . "\n", FILE_APPEND);
 
             return new ResponseJson($exception->getDataForUser());
         }
