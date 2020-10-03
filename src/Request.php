@@ -174,7 +174,7 @@ class Request
      *      ]
      * ]
      * </code>
-     * @param string $parameter_list
+     * @param array $parameter_list
      * @return string
      */
     public function setFileParameterList(array $parameter_list)  {
@@ -185,11 +185,10 @@ class Request
     {
         $value = $this->getParameter($name);
 
-        if ( is_numeric($value) &&
-            (is_int($value) || preg_match("#^(-[0-9]+|[0-9]+)$#", $value))
-        )
+        $ret = filter_var($value, FILTER_VALIDATE_INT);
+        if ( $ret !== FALSE ) {
             return intval($value);
-        else {
+        } else {
             throw new ExceptionWithData('parameter is not an integer', [
                 'name' => $name,
                 'type' => gettype($value),

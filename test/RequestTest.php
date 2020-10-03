@@ -236,7 +236,7 @@ class RequestTest extends TestCase
     {
         return [
             [["type" => "array", "value" => []], []],
-            [["type" => "boolean", "value" => true ], true],
+//            [["type" => "boolean", "value" => true ], true],
             [["type" => "boolean", "value" => false ], false],
             [["type" => "object", "value" => new stdClass()], new stdClass()],
             [["type" => "string", "value" => "hello_world"], "hello_world"],
