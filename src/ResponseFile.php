@@ -35,7 +35,7 @@ class ResponseFile extends Response
      * https://stackoverflow.com/questions/38180690/how-to-force-download-different-type-of-extension-file-php
      */
     public function send() {
-        $this->http_response_code($this->http_response_code);
+        http_response_code($this->http_response_code);
         header($this->getHeaderContentType());
         $this->sendHeaderList();
         readfile($this->filename);
