@@ -10,11 +10,15 @@ class Controller
 {
     protected ServiceMap $service_map;
 
-    protected string $error_log_filename;
+    protected string $error_log_filename = 'php://temp';
 
     public function __construct() {
         $this->service_map = new ServiceMap();
         $this->error_log_filename = $this->getEnvVar('ERROR_LOG_FILENAME') ?? 'php://temp';
+    }
+
+    public function setErrorLogFilename(string $error_log_filename) {
+        $this->error_log_filename = $error_log_filename;
     }
 
     public function getServiceMap() : ServiceMap {
@@ -52,7 +56,10 @@ class Controller
             $data['t'] = date('Y-m-d H:i:s');
             file_put_contents($this->error_log_filename, json_encode($data, JSON_UNESCAPED_UNICODE) . "\n", FILE_APPEND);
 
-            return new ResponseJson($exception->getDataForUser());
+
+            $response = new ResponseJson($exception->getDataForUser());
+            $response->setHttpResponseCode(200);
+            return $response;
         }
     }
 

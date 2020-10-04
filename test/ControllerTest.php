@@ -47,6 +47,8 @@ class ControllerTest extends TestCase
             ->method('getRequest')
             ->willReturn($request);
 
+        $controller->setErrorLogFilename($this->path . '/log');
+
         /** @var Controller $controller */
         return $controller;
     }
@@ -90,13 +92,17 @@ class ControllerTest extends TestCase
      */
     public function testRunException()
     {
-        $_ENV['ERROR_LOG_FILENAME'] = $this->path . '/log';
-
         $controller = $this->getControllerForTest(['method' => 'echo']);
 
 
         $response = $this->assertResponseJson($controller);
+
         $log = $this->assertLog();
+
+        // obtienen el http response code
+        $error_code = http_response_code();
+
+        $this->assertEquals(200, $error_code);
 
         $this->assertEquals($response['i'], $log['i']);
         $this->assertArrayHasKey('t', $log);
