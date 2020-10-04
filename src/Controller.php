@@ -58,7 +58,7 @@ class Controller
 
 
             $response = new ResponseJson($exception->getDataForUser());
-            $response->setHttpResponseCode(200);
+            $response->setHttpResponseCode(400);
             return $response;
         }
     }

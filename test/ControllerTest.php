@@ -102,7 +102,7 @@ class ControllerTest extends TestCase
         // obtienen el http response code
         $error_code = http_response_code();
 
-        $this->assertEquals(200, $error_code);
+        $this->assertEquals(400, $error_code);
 
         $this->assertEquals($response['i'], $log['i']);
         $this->assertArrayHasKey('t', $log);
