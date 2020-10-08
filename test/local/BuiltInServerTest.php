@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace test\labo86\hapi\local;
 
 use labo86\exception_with_data\ExceptionWithData;
+use labo86\hapi\ErrMsg;
 use labo86\hapi\testing\BuiltInServer;
 use PHPUnit\Framework\TestCase;
 
@@ -25,7 +26,7 @@ class BuiltInServerTest extends TestCase
 
         $response = $server->makeRequest('get_method.php');
 
-        $this->assertJsonStringToArray(['m' => 'request does not have parameter', 'd' => ['parameter_name' => 'method', 'available_parameter_list' => []]], $response);
+        $this->assertJsonStringToArray(['m' => ErrMsg::REQUEST_DOES_NOT_HAVE_PARAMETER, 'd' => ['parameter_name' => 'method', 'available_parameter_list' => []]], $response);
 
         $this->assertStringContainsString('[200]: GET /get_method.php', $server->getStdErr());
     }

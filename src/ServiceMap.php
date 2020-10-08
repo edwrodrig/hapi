@@ -64,7 +64,7 @@ class ServiceMap
         if ( isset($this->service_map[$method_name]) ) {
             return $this->service_map[$method_name];
         } else {
-            throw new ExceptionWithData("SERVICE_NOT_REGISTERED", ["method_name" => $method_name]);
+            throw new ExceptionWithData(ErrMsg::SERVICE_NOT_REGISTERED, ["method_name" => $method_name]);
         }
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace labo86\hapi;
 
 use labo86\exception_with_data\ExceptionForFrontEnd;
+use labo86\exception_with_data\MessageMapper;
 use Throwable;
 
 class Controller
@@ -11,6 +12,8 @@ class Controller
     protected ServiceMap $service_map;
 
     protected string $error_log_filename = 'php://temp';
+
+    protected MessageMapper $message_mapper;
 
     public function __construct() {
         $this->service_map = new ServiceMap();
@@ -23,6 +26,10 @@ class Controller
 
     public function getServiceMap() : ServiceMap {
         return $this->service_map;
+    }
+
+    public function setMessageMapper(MessageMapper $mapper) {
+        $this->message_mapper = $mapper;
     }
 
     /**
@@ -51,7 +58,7 @@ class Controller
 
         } catch ( Throwable $throwable ) {
 
-            $exception = ExceptionForFrontEnd::normalize($throwable);
+            $exception = ExceptionForFrontEnd::normalize($throwable, $this->message_mapper);
             $data = $exception->toArray();
             $data['t'] = date('Y-m-d H:i:s');
             file_put_contents($this->error_log_filename, json_encode($data, JSON_UNESCAPED_UNICODE) . "\n", FILE_APPEND);

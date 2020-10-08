@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace test\labo86\hapi\local;
 
 use labo86\exception_with_data\ExceptionWithData;
+use labo86\hapi\ErrMsg;
 use labo86\hapi\testing\BuiltInServer;
 use PHPUnit\Framework\TestCase;
 
@@ -30,9 +31,9 @@ class RequestTest extends TestCase
     public function getMethodProvider()
     {
         return [
-            [[], '{"m":"request does not have parameter","d":{"parameter_name":"method","available_parameter_list":[]}}', ""],
+            [[], '{"m":"' . ErrMsg::REQUEST_DOES_NOT_HAVE_PARAMETER . '","d":{"parameter_name":"method","available_parameter_list":[]}}', ""],
             [["method" => "action"], "action", "?method=action"],
-            [["param" => "action"], '{"m":"request does not have parameter","d":{"parameter_name":"method","available_parameter_list":{"param":"action"}}}', "?param=action"],
+            [["param" => "action"], '{"m":"' . ErrMsg::REQUEST_DOES_NOT_HAVE_PARAMETER .'","d":{"parameter_name":"method","available_parameter_list":{"param":"action"}}}', "?param=action"],
             [["method" => "action", "param" => "content"], "action", "?method=action&param=content"]
         ];
     }
@@ -106,7 +107,7 @@ class RequestTest extends TestCase
 
         $response = self::$server->makeRequest('get_method.php', $context);
 
-        $this->assertJsonStringToArray(['m' => 'json in post is not an array', 'd' => ['contents' => '"hola"']], $response);
+        $this->assertJsonStringToArray(['m' => Errmsg::JSON_IN_POST_IS_NOT_AN_ARRAY, 'd' => ['contents' => '"hola"']], $response);
 
     }
 
@@ -126,7 +127,7 @@ class RequestTest extends TestCase
 
         $json_response = json_decode($response, true);
         $this->assertEquals(['contents' => '{id}'], $json_response['d']);
-        $this->assertJsonStringToArray(['m' => 'post content is not a valid json', 'd' => ['contents' => '{id}']], $response);
+        $this->assertJsonStringToArray(['m' => ErrMsg::POST_CONTENT_IS_NOT_A_VALID_JSON, 'd' => ['contents' => '{id}']], $response);
 
     }
 
@@ -251,7 +252,7 @@ EOF
         $file_data = $json_data['file'];
         $this->assertArrayNotHasKey('tmp_name', $file_data);
         $this->assertEquals([
-            'm' => 'request does not have parameter',
+            'm' => ErrMsg::REQUEST_DOES_NOT_HAVE_PARAMETER,
             'd' => [
                 'parameter_name' => 'file',
                 'available_parameter_list' => []

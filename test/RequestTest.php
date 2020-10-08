@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace test\labo86\hapi;
 
 use labo86\exception_with_data\ExceptionWithData;
+use labo86\hapi\ErrMsg;
 use labo86\hapi\InputFile;
 use labo86\hapi\InputFileList;
 use labo86\hapi\Request;
@@ -37,7 +38,7 @@ class RequestTest extends TestCase
 
                 $this->fail("should throw");
         } catch (ExceptionWithData $exception) {
-            $this->assertEquals("request does not have parameter", $exception->getMessage());
+            $this->assertEquals(ErrMsg::REQUEST_DOES_NOT_HAVE_PARAMETER, $exception->getMessage());
             $this->assertEquals(['parameter_name' => 'method',
                                 'available_parameter_list' => ['a' => '1']], $exception->getData());
         }
@@ -226,7 +227,7 @@ class RequestTest extends TestCase
 
         } catch (ExceptionWithData $exception) {
             $expected['name'] = 'method';
-            $this->assertEquals("parameter is not a string", $exception->getMessage());
+            $this->assertEquals(ErrMsg::PARAMETER_IS_NOT_A_STRING, $exception->getMessage());
             $this->assertEquals($expected, $exception->getData());
         }
 
@@ -260,7 +261,7 @@ class RequestTest extends TestCase
 
         } catch (ExceptionWithData $exception) {
             $expected['name'] = 'method';
-            $this->assertEquals("parameter is not an integer", $exception->getMessage());
+            $this->assertEquals(ErrMsg::PARAMETER_IS_NOT_AN_INTEGER, $exception->getMessage());
             $this->assertEquals($expected, $exception->getData());
         }
     }
@@ -292,7 +293,7 @@ class RequestTest extends TestCase
 
         } catch (ExceptionWithData $exception) {
             $expected['name'] = 'method';
-            $this->assertEquals("parameter is not an array", $exception->getMessage());
+            $this->assertEquals(ErrMsg::PARAMETER_IS_NOT_AN_ARRAY, $exception->getMessage());
             $this->assertEquals($expected, $exception->getData());
         }
     }
@@ -321,7 +322,7 @@ class RequestTest extends TestCase
 
         } catch (ExceptionWithData $exception) {
             $expected['name'] = 'method';
-            $this->assertEquals("parameter is not a single file input", $exception->getMessage());
+            $this->assertEquals(ErrMsg::PARAMETER_IS_NOT_A_SINGLE_FILE_INPUT, $exception->getMessage());
             $this->assertEquals($expected, $exception->getData());
         }
     }
@@ -349,7 +350,7 @@ class RequestTest extends TestCase
 
         } catch (ExceptionWithData $exception) {
             $expected['name'] = 'method';
-            $this->assertEquals("parameter is not a multiple file input", $exception->getMessage());
+            $this->assertEquals(ErrMsg::PARAMETER_IS_NOT_A_MULTIPLE_FILE_INPUT, $exception->getMessage());
             $this->assertEquals($expected, $exception->getData());
         }
     }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace test\labo86\hapi;
 
+use labo86\exception_with_data\MessageMapperArray;
 use labo86\hapi\Controller;
 use labo86\hapi\Request;
 use labo86\hapi\Response;
@@ -48,7 +49,7 @@ class ControllerTest extends TestCase
             ->willReturn($request);
 
         $controller->setErrorLogFilename($this->path . '/log');
-
+        $controller->setMessageMapper(new MessageMapperArray([]));
         /** @var Controller $controller */
         return $controller;
     }

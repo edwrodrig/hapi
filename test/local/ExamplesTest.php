@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace test\labo86\hapi\local;
 
 use labo86\exception_with_data\ExceptionWithData;
+use labo86\hapi\ErrMsg;
 use labo86\hapi\testing\BuiltInServer;
 use PHPUnit\Framework\TestCase;
 
@@ -26,7 +27,7 @@ class ExamplesTest extends TestCase
 
         $response = $server->makeRequest('index.php');
         $this->assertJsonStringToArray([
-            'error' => 'request does not have parameter',
+            'error' => ErrMsg::REQUEST_DOES_NOT_HAVE_PARAMETER,
             'try_this' => 'http://localhost:8080/index.php?method=echo'
         ],  $response);
 

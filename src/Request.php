@@ -52,7 +52,7 @@ class Request
     public function getParameter(string $parameter_name) {
         $parameter_list = $this->getParameterList();
         if ( !$this->hasParameter($parameter_name) )
-            throw new ExceptionWithData('request does not have parameter', [ 'parameter_name' => $parameter_name, 'available_parameter_list' => $parameter_list ]);
+            throw new ExceptionWithData(ErrMsg::REQUEST_DOES_NOT_HAVE_PARAMETER, [ 'parameter_name' => $parameter_name, 'available_parameter_list' => $parameter_list ]);
         else
             return $parameter_list[$parameter_name];
     }
@@ -123,10 +123,10 @@ class Request
             $decoded_json = json_decode($contents, true);
 
             if ( $decoded_json === null )
-                throw new ExceptionWithData('post content is not a valid json', ['contents' => $contents]);
+                throw new ExceptionWithData(ErrMsg::POST_CONTENT_IS_NOT_A_VALID_JSON, ['contents' => $contents]);
 
             if ( !is_array($decoded_json) )
-                throw new ExceptionWithData('json in post is not an array', ['contents' => $contents]);
+                throw new ExceptionWithData(ErrMsg::JSON_IN_POST_IS_NOT_AN_ARRAY, ['contents' => $contents]);
 
             return $decoded_json;
 
@@ -189,7 +189,7 @@ class Request
         if ( $ret !== FALSE ) {
             return intval($value);
         } else {
-            throw new ExceptionWithData('parameter is not an integer', [
+            throw new ExceptionWithData(ErrMsg::PARAMETER_IS_NOT_AN_INTEGER, [
                 'name' => $name,
                 'type' => gettype($value),
                 'value' => $value
@@ -206,19 +206,19 @@ class Request
     public function getStringParameter(string $name) : string {
         $value = $this->getParameter($name);
         if ( is_array($value) ) {
-            throw new ExceptionWithData('parameter is not a string', [
+            throw new ExceptionWithData(ErrMsg::PARAMETER_IS_NOT_A_STRING, [
                 'name' => $name,
                 'type' => gettype($value),
                 'value' => $value
             ]);
         } else if ( is_object($value) ) {
-            throw new ExceptionWithData('parameter is not a string', [
+            throw new ExceptionWithData(ErrMsg::PARAMETER_IS_NOT_A_STRING, [
                 'name' => $name,
                 'type' => gettype($value),
                 'value' => $value
             ]);
         } else if ( is_bool($value)) {
-            throw new ExceptionWithData('parameter is not a string', [
+            throw new ExceptionWithData(ErrMsg::PARAMETER_IS_NOT_A_STRING, [
                 'name' => $name,
                 'type' => gettype($value),
                 'value' => $value
@@ -238,7 +238,7 @@ class Request
         if ( is_array($value))
                 return $value;
         else
-            throw new ExceptionWithData('parameter is not an array', [
+            throw new ExceptionWithData(ErrMsg::PARAMETER_IS_NOT_AN_ARRAY, [
             'name' => $name,
             'type' => gettype($value),
             'value' => $value
@@ -262,12 +262,12 @@ class Request
     public function getFileParameter(string $name) : InputFile {
         $files = $this->getFileParameterList();
         if ( !$this->hasFileParameter($name) )
-            throw new ExceptionWithData('request does not have parameter', [ 'parameter_name' => $name, 'available_parameter_list' => $files ]);
+            throw new ExceptionWithData(ErrMsg::REQUEST_DOES_NOT_HAVE_PARAMETER, [ 'parameter_name' => $name, 'available_parameter_list' => $files ]);
 
         $file_input = $files[$name];
 
         if ( !is_string($file_input['name']) )
-            throw new ExceptionWithData('parameter is not a single file input', [
+            throw new ExceptionWithData(ErrMsg::PARAMETER_IS_NOT_A_SINGLE_FILE_INPUT, [
                 'name' => $name,
                 'type' => gettype($file_input),
                 'value' => $file_input
@@ -293,12 +293,12 @@ class Request
     public function getFileListParameter(string $name) : InputFileList {
         $files = $this->getFileParameterList();
         if ( !$this->hasFileParameter($name) )
-            throw new ExceptionWithData('request does not have parameter', [ 'parameter_name' => $name, 'available_parameter_list' => $files ]);
+            throw new ExceptionWithData(ErrMsg::REQUEST_DOES_NOT_HAVE_PARAMETER, [ 'parameter_name' => $name, 'available_parameter_list' => $files ]);
 
         $file_list_input = $files[$name];
 
         if ( !is_array($file_list_input['name']))
-            throw new ExceptionWithData('parameter is not a multiple file input', [
+            throw new ExceptionWithData(ErrMsg::PARAMETER_IS_NOT_A_MULTIPLE_FILE_INPUT, [
                     'name' => $name,
                     'type' => gettype($file_list_input),
                     'value' => $file_list_input
