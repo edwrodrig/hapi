@@ -21,4 +21,21 @@ class ResponseJsonTest extends TestCase
         $recoveredData = json_decode($json_data, true);
         $this->assertEquals($originalData, $recoveredData);
     }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testSendCookie()
+    {
+        $originalData = ['a' => 1, 'b' => 2];
+        $response = new ResponseJson($originalData);
+        $response->setCookie('session_id', 'wachulin');
+        ob_start();
+        $response->send();
+        $json_data = ob_get_clean();
+        $recoveredData = json_decode($json_data, true);
+        $this->assertEquals($originalData, $recoveredData);
+
+        $this->assertEquals(['value' => 'wachulin', 'options' => []],$response->getCookieMap()['session_id']);
+    }
 }

@@ -38,6 +38,14 @@ try {
             ]);
             $response->addHeader('Cache-Control: max-age=10');
             return $response;
+        })
+        ->registerService('cookie', function(Request $request) : Response {
+            $response = new ResponseJson([
+                'message' => date('H:i:s'),
+                'request_params' => $request->getParameterList()
+            ]);
+            $response->setCookie('wachulin', 'something');
+            return $response;
         });
 
 

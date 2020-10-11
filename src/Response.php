@@ -13,8 +13,23 @@ abstract class Response
 
     public int $http_response_code = 200;
 
+    protected array $cookie_map = [];
+
     public function setMimeType($mime_type) {
         $this->mime_type = $mime_type;
+    }
+
+    /**
+     * Setea las cookies de la misma forma que se hace con la funcion {@see setcookie()}
+     * @param string $name
+     * @param string $value
+     * @param array $options
+     */
+    public function setCookie(string $name, string $value, array $options = []) {
+        $this->cookie_map[$name] = [
+            'value' => $value,
+            'options' => $options
+        ];
     }
 
     public function setHttpResponseCode(int $code) {
@@ -23,6 +38,21 @@ abstract class Response
 
     public function getHeaderContentType() : string {
         return 'Content-Type: ' . $this->mime_type;
+    }
+
+    /**
+     * La llave es el nombre de la cookie,
+     * el valor es un arreglo con value y options de acuerdo a la funcion {@see setcookie()}
+     * @return array
+     */
+    public function getCookieMap() : array {
+        return $this->cookie_map;
+    }
+
+    protected function sendCookies() {
+        foreach ( $this->cookie_map as $name => $contents ) {
+            setcookie($name, $contents['value'], $contents['options']);
+        }
     }
 
     protected function sendHeaderList() {

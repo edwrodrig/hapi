@@ -37,6 +37,7 @@ class ResponseFile extends Response
     public function send() {
         http_response_code($this->http_response_code);
         header($this->getHeaderContentType());
+        $this->sendCookies();
         $this->sendHeaderList();
         readfile($this->filename);
     }

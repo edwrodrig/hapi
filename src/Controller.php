@@ -17,7 +17,6 @@ class Controller
 
     public function __construct() {
         $this->service_map = new ServiceMap();
-        $this->error_log_filename = $this->getEnvVar('ERROR_LOG_FILENAME') ?? 'php://temp';
     }
 
     public function setErrorLogFilename(string $error_log_filename) {
@@ -39,21 +38,13 @@ class Controller
     protected function getRequest() : Request {
         return new Request();
     }
-
-    /**
-     * @param string $var_name
-     * @return string|null
-     */
-    protected function getEnvVar(string $var_name) : ?string {
-        return $_SERVER[$var_name] ?? $_ENV[$var_name] ?? null;
-    }
-
     
     public function handleRequest(Request $request) : Response {
         try {
             $method = $request->getStringParameter('method');
 
-            return $this->service_map->getService($method)($request);
+            $method_callback = $this->service_map->getService($method);
+            return $method_callback($request);
 
 
         } catch ( Throwable $throwable ) {
