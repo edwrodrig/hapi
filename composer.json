@@ -26,8 +26,7 @@
       "labo86\\hapi\\": "src/"
     },
     "exclude-from-classmap": [
-      "src/testing/BuiltInServer.php",
-      "src/testing/Util.php"
+      "/src/testing/"
     ]
   },
   "autoload-dev": {
