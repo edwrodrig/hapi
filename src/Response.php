@@ -3,11 +3,14 @@ declare(strict_types=1);
 
 namespace labo86\hapi;
 
-abstract class Response
+/**
+ * Clase base de Respueta que tambien sirve para enviar respuestas sin cuerpo
+ * Class Response
+ * @package labo86\hapi
+ */
+class Response
 {
     protected string $mime_type;
-
-    abstract public function send();
 
     public array $header_list = [];
 
@@ -32,6 +35,13 @@ abstract class Response
         ];
     }
 
+    /**
+     * Codigos
+     * 200 OK
+     * 400 Not found
+     * 500 Internal Error
+     * @param int $code
+     */
     public function setHttpResponseCode(int $code) {
         $this->http_response_code = $code;
     }
@@ -78,5 +88,11 @@ abstract class Response
      */
     public function addHeader(string $header_line) {
         $this->header_list[] = $header_line;
+    }
+
+    public function send() {
+        http_response_code($this->http_response_code);
+        $this->sendCookies();
+        $this->sendHeaderList();
     }
 }
