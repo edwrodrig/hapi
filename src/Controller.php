@@ -41,11 +41,20 @@ class Controller
     
     public function handleRequest(Request $request) : Response {
         try {
-            $method = $request->getStringParameter('method');
+            $http_method = $request->getHttpMethod();
+            if ( $http_method === 'OPTIONS' ) {
+                $response = new Response();
+                $response->setHttpResponseCode(204);
 
-            $method_callback = $this->service_map->getService($method);
-            return $method_callback($request);
+                return $response;
 
+            } else {
+
+                $method = $request->getStringParameter('method');
+
+                $method_callback = $this->service_map->getService($method);
+                return $method_callback($request);
+            }
 
         } catch ( Throwable $throwable ) {
 

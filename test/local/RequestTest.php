@@ -75,6 +75,21 @@ class RequestTest extends TestCase
     }
 
     /**
+     * @throws ExceptionWithData
+     */
+    public function testOptions()
+    {
+        $context  = [
+            'header'  => "Content-type: application/json\r\n",
+            'method'  => 'OPTIONS',
+        ];
+
+
+        $response = self::$server->makeRequest('get_params.php', $context);
+        $this->assertJsonStringToArray([], $response);
+    }
+
+    /**
      * @dataProvider getMethodProvider
      * @throws ExceptionWithData
      */

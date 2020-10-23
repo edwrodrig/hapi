@@ -29,16 +29,12 @@ class ControllerTest extends TestCase
         exec('rm -rf ' . $this->path);
     }
 
-    public function getControllerForTest(array $params) : Controller
+    public function getControllerForTest(array $params, string $method = 'POST') : Controller
     {
-        $request = $this->getMockBuilder(Request::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['getParameterList'])
-            ->getMock();
+        $request = new Request();
+        $request->setHttpMethod($method);
+        $request->setParameterList($params);
 
-        $request->expects($this->any())
-            ->method('getParameterList')
-            ->willReturn($params);
 
         $controller = $this->getMockBuilder(Controller::class)
             ->onlyMethods(['getRequest'])
@@ -107,6 +103,24 @@ class ControllerTest extends TestCase
 
         $this->assertEquals($response['i'], $log['i']);
         $this->assertArrayHasKey('t', $log);
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testOptions()
+    {
+        $controller = $this->getControllerForTest([], 'OPTIONS');
+
+
+        $response = $this->assertResponse($controller);
+
+        $this->assertEquals("",$response);
+
+        // obtienen el http response code
+        $error_code = http_response_code();
+
+        $this->assertEquals(204, $error_code);
     }
 
 

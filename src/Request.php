@@ -23,6 +23,8 @@ class Request
 
      protected array $file_parameter_list;
 
+     protected string $http_method;
+
     /**
      * @codeCoverageIgnore
      * @param string $name
@@ -58,6 +60,26 @@ class Request
     }
 
     /**
+     * Obtiene el método http.
+     * Algunas respuestas dependen del metodo http del que se trate, por ejemplo OPTIONS
+     * @return string
+     */
+    public function getHttpMethod() : string {
+        if ( !isset($this->http_method) ) {
+            $this->http_method = $this->getServerVariable('REQUEST_METHOD');
+        }
+        return $this->http_method;
+    }
+
+    /**
+     * Setea el método http del request, esto es util para testing
+     * @param string $method
+     */
+    public function setHttpMethod(string $method) {
+        $this->http_method = $method;
+    }
+
+    /**
      * Obtiene los parametros GET y POST según sea la naturaleza del request.
      * En el caso de obtener las variables POST usa el metodo {@see getPostParameterList()}.
      * El request se obtiene de la variable de servidor {@see https://www.php.net/manual/es/reserved.variables.server.php REQUEST_METHOD}.
@@ -68,11 +90,14 @@ class Request
      */
     public function getParameterList() : array {
         if ( !isset($this->parameter_list) ) {
-            $request_method = $this->getServerVariable('REQUEST_METHOD');
+            $request_method = $this->getHttpMethod();
             if ( $request_method == "GET" )
                 $this->parameter_list = $_GET;
             else if ( $request_method == "POST" )
                $this->parameter_list = $this->getPostParameterList();
+            else  {
+                $this->parameter_list = [];
+            }
         }
         return $this->parameter_list;
     }
