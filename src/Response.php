@@ -18,7 +18,12 @@ class Response
 
     protected array $cookie_map = [];
 
-    public function setMimeType($mime_type) {
+    /**
+     * Debe contener el mime type. Este será usado para generar el header Content-Type.
+     * Conviene obtener el mime type con la función {@see mime_content_type()}
+     * @param string $mime_type
+     */
+    public function setMimeType(string $mime_type) {
         $this->mime_type = $mime_type;
     }
 
@@ -38,6 +43,7 @@ class Response
     /**
      * Codigos
      * 200 OK
+     * 204 No content, util para el método OPTIONS
      * 400 Not found
      * 500 Internal Error
      * @param int $code
