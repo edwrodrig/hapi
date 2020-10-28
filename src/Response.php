@@ -28,6 +28,15 @@ class Response
     }
 
     /**
+     * Obtiene el mime type que ha sido seteado, si no ha sido seteado entonces devuelve nulo
+     * Esta función es util para fines de testing
+     * @return string
+     */
+    public function getMimeType() : ?string {
+        return $this->mime_type ?? null;
+    }
+
+    /**
      * Setea las cookies de la misma forma que se hace con la funcion {@see setcookie()}
      * @param string $name
      * @param string $value
@@ -38,6 +47,15 @@ class Response
             'value' => $value,
             'options' => $options
         ];
+    }
+
+    /**
+     * obtiene el codigo re respueta de el request. Si no ha sido seteado devuelve null.
+     * Esta función se hizo por motivos de testeo.
+     * @return int|null
+     */
+    public function getHttpResponseCode() : ?int {
+        return $this->http_response_code ?? null;
     }
 
     /**
@@ -94,6 +112,15 @@ class Response
      */
     public function addHeader(string $header_line) {
         $this->header_list[] = $header_line;
+    }
+
+    /**
+     * Obtiene la lista de headers de la petición.
+     * Esta función se hizo por motivos de testing
+     * @return array
+     */
+    public function getHeaderList() : array {
+        return $this->header_list;
     }
 
     public function send() {
